@@ -1,6 +1,6 @@
-# vlookup_v2
+# Vlookup
 
-A new Flutter project.
+A volunteer management application
 
 ## Getting Started
 
