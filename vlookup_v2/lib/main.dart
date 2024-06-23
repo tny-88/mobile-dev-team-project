@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vlookup_v2/widgets/custom_nav_bar.dart';
-
+import 'package:vlookup_v2/pages/main_pages/Splash.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,13 +12,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'VlookUp',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        useMaterial3: true,
-      ),
-      home: const CustomNavBar(),
-    );
+        title: 'VlookUp',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          useMaterial3: true,
+        ),
+        home: const Splash());
   }
 }
