@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:vlookup_v2/pages/main_pages/SplashOptionsPage.dart';
 
-class Splash extends StatefulWidget {
-  const Splash({super.key});
+class SplashOptions extends StatefulWidget {
+  const SplashOptions({super.key});
 
   @override
-  State<Splash> createState() => _SplashState();
+  State<SplashOptions> createState() => _SplashOptionsState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashOptionsState extends State<SplashOptions> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -34,11 +33,7 @@ class _SplashState extends State<Splash> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SplashOptions()),
-                      );
+                      Navigator.pushNamed(context, '/signup');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 93, 176, 117),
@@ -47,7 +42,22 @@ class _SplashState extends State<Splash> {
                       ),
                     ),
                     child: const Text(
-                      'Get Started',
+                      'Sign Up',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 93, 176, 117),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text(
+                      'Log In',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
