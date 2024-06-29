@@ -1,72 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:vlookup_v2/pages/main_pages/homepage.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
-
-
 class _LoginPageState extends State<LoginPage> {
+  bool _obscureText = true;
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Center(
-          child: Text(
-            'Log In',
-            style: TextStyle(color: Colors.black),
-          ),
+        title: const Text(
+          'Log In',
+          style: TextStyle(color: Colors.black),
         ),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.grey[200],
                 ),
               ),
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               TextField(
                 decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
                   filled: true,
                   fillColor: Colors.grey[200],
                   suffixIcon: TextButton(
                     onPressed: () {
-                      // Show/Hide password logic
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
                     },
-                    child: Text('Show'),
+                    child: Text(_obscureText ? 'Show' : 'Hide'),
                   ),
                 ),
-                obscureText: true,
+                obscureText: _obscureText,
               ),
-              SizedBox(height: 32.0),
+              const SizedBox(height: 32.0),
               ElevatedButton(
                 onPressed: () {
-                  //Function for Login validation
-                  Navigator.pushNamed(context, '/home');
+                  // Function for Login validation
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/home', (Route<dynamic> route) => false);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 93, 176, 117),
+                  backgroundColor: const Color.fromARGB(255, 93, 176, 117),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text(
+                child: const Text(
                   'Log In',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -75,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   // Forgot password logic
                 },
-                child: Text(
+                child: const Text(
                   'Forgot your password?',
                   style: TextStyle(color: Color.fromARGB(255, 93, 176, 117)),
                 ),
@@ -87,5 +88,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-

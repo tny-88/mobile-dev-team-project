@@ -1,104 +1,126 @@
 import 'package:flutter/material.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class Profile extends StatelessWidget {
+  const Profile({Key? key}) : super(key: key);
 
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-        ),
-        body: Container(
-          width: 399,
-          height: 844,
-          decoration: BoxDecoration(
-            color: Colors.white,
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          // Green background
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 245,
+              color: const Color.fromRGBO(93, 176, 116, 1),
+            ),
           ),
-          child: Stack(
-            children: <Widget>[
-              // Green background
-              Positioned(
-                  top: 0,
-                  left: -1,
-                  child: Container(
-                    width: 400,
-                    height: 245,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(93, 176, 116, 1),
-                    ),
-                  )),
 
-              // Profile picture
-              Positioned(
-                top: 128,
-                left: 120,
-                child: Container(
-                  width: 158,
-                  height: 158,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromRGBO(100, 100, 100, 0.15),
-                        offset: Offset(0, 4),
-                        blurRadius: 20,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 4,
+          // Settings button
+          Positioned(
+            top: 40,
+            left: 20,
+            child: IconButton(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onPressed: () {
+                // Add settings functionality
+              },
+            ),
+          ),
+
+          // Logout button
+          Positioned(
+            top: 40,
+            right: 20,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                ),
+              ),
+              child:
+                  const Text('Logout', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                // Add logout functionality
+              },
+            ),
+          ),
+
+          // Profile picture
+          Positioned(
+            top: 128,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: 158,
+                height: 158,
+                decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(100, 100, 100, 0.15),
+                      offset: Offset(0, 4),
+                      blurRadius: 20,
                     ),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/profile_picture.png'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                    borderRadius: BorderRadius.circular(158),
+                  ],
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 4,
+                  ),
+                  shape: BoxShape.circle,
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/profile.jpg'),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
+            ),
+          ),
 
-              // Name
-              Positioned(
-                top: 299,
-                left: 88,
-                child: Text(
+          // Name and Gender
+          Positioned(
+            top: 299,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: const [
+                Text(
                   'James Boateng',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-
-              // Green bar on the bottom
-              Positioned(
-                top: 788,
-                left: 0,
-                child: Container(
-                  width: 390,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(93, 176, 116, 1),
+                SizedBox(height: 5),
+                Text(
+                  'Male',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+
+          // Green bar on the bottom
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 56,
+              color: const Color.fromRGBO(93, 176, 116, 1),
+            ),
+          ),
+        ],
       ),
     );
   }
