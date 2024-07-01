@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vlookup_v2/pages/main_pages/Splash.dart';
 
 class Profile extends StatelessWidget {
   const Profile({Key? key}) : super(key: key);
@@ -45,7 +46,10 @@ class Profile extends StatelessWidget {
               child:
                   const Text('Logout', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                // Add logout functionality
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Splash()),
+                );
               },
             ),
           ),
