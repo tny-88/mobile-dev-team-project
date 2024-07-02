@@ -63,7 +63,7 @@ def update_user(email):
     
     return jsonify({'message': 'User updated successfully!'}), 200
 
-#Login functionalitu 
+#Login functionality 
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -133,38 +133,58 @@ def create_event():
     date = data['date']
     email = data['email']
         
-    # Create user data dictionary with timestamps
+    # Create event data dictionary with timestamps
     event_data = {
         'title': title,
         'description': description,
         'date': date,
         'email': email,
         'image': '',
-        'location': {'address':'', 'city':''},
-        'coordinates': {'latitude':'', 'longitude':''},
+        'location': {'address': '', 'city': ''},
+        'coordinates': {'latitude': '', 'longitude': ''},
         'createdAt': datetime.now(),
         'updatedAt': datetime.now()
     }
     
-    # Add user data to Firestore
-    db.collection('Events').document(email).set(event_data)
+    # Add event data to Firestore with auto-generated ID
+    event_ref = db.collection('Events').add(event_data)
+    event_id = event_ref[1].id  # Get the generated document ID
     
-
-    
-    return jsonify({'message': 'Event created successfully!'}), 200
+    return jsonify({'message': 'Event created successfully!', 'event_id': event_id}), 200
 
 
 # Update event details
-@app.route('/update_event/<email>', methods=['PUT'])
-def update_event(email):
+@app.route('/update_event/<event_id>', methods=['PUT'])
+def update_event(event_id):
     data = request.get_json()
     fields_to_update = {key: value for key, value in data.items() if key in ['title', 'description', 'date', 'image', 'location', 'coordinates']}
     fields_to_update['updatedAt'] = datetime.now()
 
-    # Update user data
-    event_ref = db.collection('Events').document(email)
+    # Update event data
+    event_ref = db.collection('Events').document(event_id)
     event_ref.update(fields_to_update)
     
     return jsonify({'message': 'Event updated successfully!'}), 200
 
+
+# Get event details
+@app.route('/get_event/<event_id>', methods=['GET'])
+def get_event(event_id):
+    event_ref = db.collection('Events').document(event_id)
+    event_data = event_ref.get()
+    
+    if event_data.exists:
+        event_data = event_data.to_dict()
+        return jsonify(event_data), 200
+    else:
+        return jsonify({'message': 'Event does not exist!'}), 404
+
+
+# Delete event  
+@app.route('/delete_event/<event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    event_ref = db.collection('Events').document(event_id)
+    event_ref.delete()
+    
+    return jsonify({'message': 'Event deleted successfully!'}), 200
 
