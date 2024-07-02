@@ -23,7 +23,7 @@ class Profile extends StatelessWidget {
           // Settings button
           Positioned(
             top: 40,
-            left: 20,
+            right: 20,
             child: IconButton(
               icon: const Icon(Icons.settings, color: Colors.white),
               onPressed: () {
@@ -32,27 +32,27 @@ class Profile extends StatelessWidget {
             ),
           ),
 
-          // Logout button
-          Positioned(
-            top: 40,
-            right: 20,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18.0),
-                ),
-              ),
-              child:
-                  const Text('Logout', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Splash()),
-                );
-              },
-            ),
-          ),
+          // // Logout button
+          // Positioned(
+          //   top: 40,
+          //   right: 20,
+          //   child: ElevatedButton(
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.red,
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(18.0),
+          //       ),
+          //     ),
+          //     child:
+          //         const Text('Logout', style: TextStyle(color: Colors.white)),
+          //     onPressed: () {
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => const Splash()),
+          //       );
+          //     },
+          //   ),
+          // ),
 
           // Profile picture
           Positioned(

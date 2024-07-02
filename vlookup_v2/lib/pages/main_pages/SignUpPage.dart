@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -8,10 +9,19 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  String? _phoneError;
+  String? _emailError;
+  String? selectedGender;
   DateTime? _selectedDate;
   bool _newsletter = false;
   bool _termsAccepted = false;
   bool _obscurePassword = true;
+
+  bool _isValidEmail(String email) {
+    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
+  }
 
   void _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -96,34 +106,83 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     SizedBox(width: 16.0),
                     Expanded(
-                      child: TextField(
+                      child: DropdownButtonFormField<String>(
+                        value: selectedGender,
                         decoration: InputDecoration(
                           labelText: 'Gender',
                           border: OutlineInputBorder(),
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
+                        items: <String>[
+                          'Male',
+                          'Female',
+                          'Other',
+                          'Prefer not to say'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedGender = newValue;
+                          });
+                        },
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 16.0),
                 TextField(
+                  controller: _phoneController,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.grey[200],
+                    errorText: _phoneError,
                   ),
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isEmpty) {
+                        _phoneError = 'Phone number is required';
+                      } else if (value.length != 10) {
+                        _phoneError = 'Phone number must be 10 digits';
+                      } else {
+                        _phoneError = null;
+                      }
+                    });
+                  },
                 ),
                 SizedBox(height: 16.0),
                 TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.grey[200],
+                    errorText: _emailError,
                   ),
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value.isEmpty) {
+                        _emailError = 'Email is required';
+                      } else if (!_isValidEmail(value)) {
+                        _emailError = 'Enter a valid email address';
+                      } else {
+                        _emailError = null;
+                      }
+                    });
+                  },
                 ),
                 SizedBox(height: 16.0),
                 TextField(
@@ -203,7 +262,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushNamed(context, '/login');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 93, 176, 117),
