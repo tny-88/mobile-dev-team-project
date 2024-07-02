@@ -22,6 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _isValidEmail(String email) {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
+
   String? _selectedGender;
 
   void _pickDate(BuildContext context) async {
@@ -105,7 +106,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 16.0),
+                    const SizedBox(width: 16.0),
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         value: _selectedGender,
@@ -120,32 +121,33 @@ class _SignUpPageState extends State<SignUpPage> {
                             _selectedGender = newValue;
                           });
                         },
-                      child: DropdownButtonFormField<String>(
-                        value: selectedGender,
-                        decoration: InputDecoration(
-                          labelText: 'Gender',
-                          border: OutlineInputBorder(),
-                          filled: true,
-                          fillColor: Colors.grey[200],
+                        hint: DropdownButtonFormField<String>(
+                          value: selectedGender,
+                          decoration: InputDecoration(
+                            labelText: 'Gender',
+                            border: OutlineInputBorder(),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          items: <String>[
+                            'Male',
+                            'Female',
+                            'Other',
+                            'Prefer not to say'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedGender = newValue;
+                            });
+                          },
                         ),
-                        items: <String>[
-                          'Male',
-                          'Female',
-                          'Other',
-                          'Prefer not to say'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedGender = newValue;
-                          });
-                        },
                       ),
-                    ),
+                    )
                   ],
                 ),
                 SizedBox(height: 16.0),
@@ -159,7 +161,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                     errorText: _phoneError,
                   ),
-                  keyboardType: TextInputType.phone,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(10),
@@ -187,7 +188,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                     errorText: _emailError,
                   ),
-                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     setState(() {
                       if (value.isEmpty) {
