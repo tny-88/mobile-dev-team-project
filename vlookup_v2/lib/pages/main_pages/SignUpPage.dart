@@ -200,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/home');
@@ -211,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Sign Up',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -220,7 +220,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: () {
                     // Forgot password logic
                   },
-                  child: Text(
+                  child: const Text(
                     'Forgot your password?',
                     style: TextStyle(color: Color.fromARGB(255, 93, 176, 117)),
                   ),
