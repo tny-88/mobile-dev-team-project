@@ -8,3 +8,4 @@ use:
 flask run
 to run the server
 
+Create a private key folder and put the firestore private key (.json file) in the folder
