@@ -1,9 +1,12 @@
+import uuid
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import firebase_admin
 import bcrypt
 from firebase_admin import credentials, firestore
 from datetime import datetime
+from google.cloud import storage
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -11,6 +14,11 @@ CORS(app)  # Enable CORS
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate(r'private_key/jet-labs-firebase.json')
 firebase_admin.initialize_app(cred)
+gcp_cred = r'private_key/jet-labs-428123-8f10e129e80b.json'
+
+# Initialize Google Cloud Storage client
+gcp_client = storage.Client.from_service_account_json(gcp_cred)
+BUCKET_NAME = 'vlookup_media'
 
 # Get Firestore client
 db = firestore.client()
@@ -122,6 +130,81 @@ def change_password(email):
     else:
         return jsonify({'message': 'Invalid password!'}), 401
     
+@app.route('/upload_profile_pic/<email>', methods=['PUT'])
+def upload_profile_pic(email):
+    if 'file' not in request.files:
+        return jsonify({"error": "No file part in the request"}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"error": "No file selected for uploading"}), 400
+    
+    filename = secure_filename(file.filename)
+    unique_filename = str(uuid.uuid4()) + "_" + filename
+    filepath = f'profile_pictures/{unique_filename}'
+    
+    try:
+        bucket = gcp_client.get_bucket(BUCKET_NAME)
+        blob = bucket.blob(filepath)
+        blob.upload_from_file(file)
+        
+        
+        # Update Firestore with the URL of the uploaded image
+        user_ref = db.collection('Users').document(email)
+        user_ref.update({'profileImage': blob.public_url, 'updatedAt': datetime.now()})
+        
+        return jsonify({"message": "File uploaded successfully", "file_url": blob.public_url}), 200
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/delete_profile_pic/<email>', methods=['PUT'])
+def delete_profile_pic(email):
+    try:
+        user_ref = db.collection('Users').document(email)
+        user_data = user_ref.get()
+        
+        if user_data.exists:
+            user_data = user_data.to_dict()
+            profile_image_url = user_data.get('profileImage', '')
+            
+            if profile_image_url:
+                file_path = profile_image_url.split(f"https://storage.googleapis.com/{BUCKET_NAME}/")[-1]
+                
+                bucket = gcp_client.get_bucket(BUCKET_NAME)
+                blob = bucket.blob(file_path)
+                blob.delete()
+                
+                user_ref.update({'profileImage': '', 'updatedAt': datetime.now()})
+                
+                return jsonify({'message': 'Profile image deleted successfully!'}), 200
+            else:
+                return jsonify({'message': 'Profile image not found!'}), 404
+        else:
+            return jsonify({'message': 'User does not exist!'}), 404
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/get_profile_pic/<email>', methods=['GET'])
+def get_profile_pic(email):
+    try:
+        user_ref = db.collection('Users').document(email)
+        user_data = user_ref.get()
+        
+        if user_data.exists:
+            user_data = user_data.to_dict()
+            profile_image_url = user_data.get('profileImage', '')
+            if profile_image_url:
+                return jsonify({'profileImage': profile_image_url}), 200
+            else:
+                return jsonify({'message': 'Profile image not found!'}), 404
+        else:
+            return jsonify({'message': 'User does not exist!'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 
 ############ Events ####################
 # Create an event
@@ -187,4 +270,7 @@ def delete_event(event_id):
     event_ref.delete()
     
     return jsonify({'message': 'Event deleted successfully!'}), 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
