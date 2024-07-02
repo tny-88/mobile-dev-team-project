@@ -12,6 +12,7 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _newsletter = false;
   bool _termsAccepted = false;
   bool _obscurePassword = true;
+  String? _selectedGender;
 
   void _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -96,7 +97,19 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     SizedBox(width: 16.0),
                     Expanded(
-                      child: TextField(
+                      child: DropdownButtonFormField<String>(
+                        value: _selectedGender,
+                        items: ['Male', 'Female'].map((String gender) {
+                          return DropdownMenuItem<String>(
+                            value: gender,
+                            child: Text(gender),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedGender = newValue;
+                          });
+                        },
                         decoration: InputDecoration(
                           labelText: 'Gender',
                           border: OutlineInputBorder(),
@@ -109,6 +122,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 SizedBox(height: 16.0),
                 TextField(
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     border: OutlineInputBorder(),
@@ -118,6 +132,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 SizedBox(height: 16.0),
                 TextField(
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
