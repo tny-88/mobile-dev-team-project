@@ -3,3 +3,5 @@ firebase-admin
 python-dotenv
 bcrypt
 Flask-CORS
+google-cloud
+Werkzeug
