@@ -23,8 +23,6 @@ class _SignUpPageState extends State<SignUpPage> {
     return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
   }
 
-  String? _selectedGender;
-
   void _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -38,7 +36,6 @@ class _SignUpPageState extends State<SignUpPage> {
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,54 +103,39 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16.0),
+                    SizedBox(width: 16.0),
                     Expanded(
                       child: DropdownButtonFormField<String>(
-                        value: _selectedGender,
-                        items: ['Male', 'Female'].map((String gender) {
+                        value: selectedGender,
+                        decoration: InputDecoration(
+                          labelText: 'Gender',
+                          border: OutlineInputBorder(),
+                          filled: true,
+                          fillColor: Colors.grey[200],
+                        ),
+                        items: <String>[
+                          'Male',
+                          'Female',
+                          'Other',
+                          'Prefer not to say'
+                        ].map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
-                            value: gender,
-                            child: Text(gender),
+                            value: value,
+                            child: Text(value),
                           );
                         }).toList(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            _selectedGender = newValue;
+                            selectedGender = newValue;
                           });
                         },
-                        hint: DropdownButtonFormField<String>(
-                          value: selectedGender,
-                          decoration: InputDecoration(
-                            labelText: 'Gender',
-                            border: OutlineInputBorder(),
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                          ),
-                          items: <String>[
-                            'Male',
-                            'Female',
-                            'Other',
-                            'Prefer not to say'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedGender = newValue;
-                            });
-                          },
-                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
                 SizedBox(height: 16.0),
                 TextField(
                   controller: _phoneController,
-                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
                     border: OutlineInputBorder(),
@@ -161,6 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                     errorText: _phoneError,
                   ),
+                  keyboardType: TextInputType.phone,
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(10),
@@ -180,7 +163,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 16.0),
                 TextField(
                   controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
@@ -188,6 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                     errorText: _emailError,
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   onChanged: (value) {
                     setState(() {
                       if (value.isEmpty) {
@@ -275,9 +258,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
+                SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
+                    Navigator.pushNamed(context, '/home');
                     Navigator.pushNamed(context, '/login');
                   },
                   style: ElevatedButton.styleFrom(
@@ -286,7 +270,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Sign Up',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -295,7 +279,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: () {
                     // Forgot password logic
                   },
-                  child: const Text(
+                  child: Text(
                     'Forgot your password?',
                     style: TextStyle(color: Color.fromARGB(255, 93, 176, 117)),
                   ),
