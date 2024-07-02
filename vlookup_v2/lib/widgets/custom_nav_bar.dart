@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../pages/main_pages/chats.dart';
 import '../pages/main_pages/profile.dart';
 import '../pages/main_pages/homepage.dart';
 import '../pages/main_pages/volunteership.dart';
@@ -14,7 +13,7 @@ class CustomNavBar extends StatefulWidget {
 class _CustomNavBarState extends State<CustomNavBar> {
   int currentPage = 0;
     
-    final List<Widget> screens = const [Homepage(), Volunteership(), Chats(), Profile() ];
+    final List<Widget> screens = const [Homepage(), Volunteership(), Profile() ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +35,6 @@ class _CustomNavBarState extends State<CustomNavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
             label: 'Volunteership',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chats',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
