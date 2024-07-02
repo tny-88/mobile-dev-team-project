@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 16.0),
               TextField(
+                keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   border: const OutlineInputBorder(),
