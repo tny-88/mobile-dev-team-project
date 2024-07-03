@@ -47,76 +47,109 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-   void _showForm() {
+  void resetImage() {
+    setState(() {
+      _image = null; // Reset the image when the form is closed
+    });
+  }
+
+  void _showForm() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _image != null
-                      ? Image.file(
-                          _image!,
-                          height: 100,
-                          width: 100,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          height: 100,
-                          width: 100,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.image, size: 50),
-                        ),
-                  SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () => _getImage(ImageSource.camera),
-                        child: Text('Take Photo'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () => _getImage(ImageSource.gallery),
-                        child: Text('Choose from Gallery'),
-                      ),
-                    ],
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Title'),
-                  ),
-                  TextField(
-                    decoration: InputDecoration(labelText: 'Description'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement location upload functionality
+        // ignore: deprecated_member_use
+        return WillPopScope(
+            onWillPop: () async {
+              resetImage();
+              return true;
+            },
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setModalState) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          _image != null
+                              ? Image.file(
+                                  _image!,
+                                  height: 100,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(
+                                  height: 100,
+                                  width: 100,
+                                  color: Colors.grey[300],
+                                  child: Icon(Icons.image, size: 50),
+                                ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final XFile? pickedImage = await _picker
+                                      .pickImage(source: ImageSource.camera);
+                                  if (pickedImage != null) {
+                                    setModalState(() {
+                                      _image = File(pickedImage.path);
+                                    });
+                                  }
+                                },
+                                child: const Text('Take Photo'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () async {
+                                  final XFile? pickedImage = await _picker
+                                      .pickImage(source: ImageSource.gallery);
+                                  if (pickedImage != null) {
+                                    setModalState(() {
+                                      _image = File(pickedImage.path);
+                                    });
+                                  }
+                                },
+                                child: const Text('Choose from Gallery'),
+                              ),
+                            ],
+                          ),
+                          const TextField(
+                            decoration: InputDecoration(labelText: 'Title'),
+                          ),
+                          const TextField(
+                            decoration:
+                                InputDecoration(labelText: 'Description'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              //upload functionality
+                            },
+                            child: const Text('Upload Location'),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              // Implement form submission
+                              Navigator.pop(context);
+                              resetImage();
+                            },
+                            child: const Text('Submit'),
+                          ),
+                        ],
+                      );
                     },
-                    child: Text('Upload Location'),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement form submission
-                      Navigator.pop(context);
-                    },
-                    child: Text('Submit'),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-        );
+            ));
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
