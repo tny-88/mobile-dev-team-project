@@ -263,7 +263,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.pushNamed(context, '/home');
-                    Navigator.pushNamed(context, '/login');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color.fromARGB(255, 93, 176, 117),

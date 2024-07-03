@@ -12,8 +12,13 @@ class CustomNavBar extends StatefulWidget {
 
 class _CustomNavBarState extends State<CustomNavBar> {
   int currentPage = 0;
-    
-    final List<Widget> screens = const [Homepage(), Volunteership(), Profile() ];
+
+  final List<Widget> screens = const [
+    Homepage(),
+    Volunteership(),
+    Volunteership(),
+    Profile()
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +38,12 @@ class _CustomNavBarState extends State<CustomNavBar> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.article_outlined),
             label: 'Volunteership',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_month),
+            label: 'Event Calendar',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),

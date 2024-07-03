@@ -18,7 +18,7 @@ class _SplashState extends State<Splash> {
         body: Container(
           constraints: const BoxConstraints.expand(),
           decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 240, 240, 242),
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
           child: Column(
             children: [

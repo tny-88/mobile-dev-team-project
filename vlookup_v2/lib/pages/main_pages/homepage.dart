@@ -86,14 +86,29 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0), // height of appbar
+        preferredSize: const Size.fromHeight(150.0), // height of appbar
         child: AppBar(
-          title: Padding(
+          flexibleSpace: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Image.asset(
-              'assets/images/Logo.png',
-              height: 60,
-              fit: BoxFit.contain,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/Logo.png',
+                  height: 90,
+                  fit: BoxFit.fitHeight,
+                ),
+                SizedBox(height: 10),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           centerTitle: true,
@@ -113,57 +128,34 @@ class _HomepageState extends State<Homepage> {
           ],
         ),
       ),
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                  ),
-                ),
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: _items.length,
-                itemBuilder: (context, index) {
-                  return Card(
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: ListView.builder(
+          itemCount: _items.length,
+          itemBuilder: (context, index) {
+            return Card(
+              child: Column(
+                children: <Widget>[
+                  Image.asset(_items[index]['image']),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: <Widget>[
-                        Image.asset(_items[index]['image']),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                _items[index]['title'],
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 8.0),
-                              Text(
-                                _items[index]['description'],
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ],
-                          ),
+                        Text(
+                          _items[index]['title'],
+                          style: TextStyle(fontSize: 24),
+                        ),
+                        Text(
+                          _items[index]['description'],
+                          style: TextStyle(fontSize: 18),
                         ),
                       ],
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
