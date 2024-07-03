@@ -68,7 +68,7 @@ class _VolunteershipState extends State<Volunteership> {
                     ),
                   ],
                 ),
-                Text(
+                const Text(
                   'Enrolled Opportunities',
                   style: TextStyle(
                     color: Colors.black,
