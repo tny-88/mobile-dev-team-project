@@ -86,7 +86,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50.0), // height of appbar
+        preferredSize: const Size.fromHeight(60.0), // height of appbar
         child: AppBar(
           title: Padding(
             padding: const EdgeInsets.all(16.0),
