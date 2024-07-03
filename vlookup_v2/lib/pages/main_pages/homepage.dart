@@ -85,40 +85,90 @@ class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Homepage'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50.0), // height of appbar
+        child: AppBar(
+          title: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Image.asset(
+              'assets/images/Logo.png',
+              height: 60,
+              fit: BoxFit.contain,
+            ),
+          ),
+          centerTitle: true,
+          actions: [
+            TextButton(
+              onPressed: () {
+                // Logic for filtering volunteer cards
+              },
+              child: const Text(
+                'Filter',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 16.0,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      body: RefreshIndicator(
-        onRefresh: _refreshData,
-        child: ListView.builder(
-          itemCount: _items.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: Column(
-                children: <Widget>[
-                  Image.asset(_items[index]['image']),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: _items.length,
+                itemBuilder: (context, index) {
+                  return Card(
                     child: Column(
                       children: <Widget>[
-                        Text(
-                          _items[index]['title'],
-                          style: TextStyle(fontSize: 24),
-                        ),
-                        Text(
-                          _items[index]['description'],
-                          style: TextStyle(fontSize: 18),
+                        Image.asset(_items[index]['image']),
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                _items[index]['title'],
+                                style: TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(height: 8.0),
+                              Text(
+                                _items[index]['description'],
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                  );
+                },
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.black,
         onPressed: _showForm,
         child: Icon(Icons.add),
       ),
