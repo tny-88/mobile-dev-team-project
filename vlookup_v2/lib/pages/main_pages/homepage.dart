@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'dart:async';
+import 'dart:io';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -9,6 +11,8 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  File? _image;
+  final ImagePicker _picker = ImagePicker();
   List<Map<String, dynamic>> _items = List.generate(
     5,
     (index) => {
@@ -18,6 +22,16 @@ class _HomepageState extends State<Homepage> {
       "image": "assets/images/image_${index + 1}.jpg",
     },
   );
+
+  Future<void> _getImage(ImageSource source) async {
+    final XFile? pickedImage = await _picker.pickImage(source: source);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+      });
+    }
+  }
 
   Future<void> _refreshData() async {
     // Simulating a network request
@@ -33,7 +47,7 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _showForm() {
+   void _showForm() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -48,11 +62,32 @@ class _HomepageState extends State<Homepage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implement image picking functionality
-                    },
-                    child: Text('Upload Image'),
+                  _image != null
+                      ? Image.file(
+                          _image!,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          height: 100,
+                          width: 100,
+                          color: Colors.grey[300],
+                          child: Icon(Icons.image, size: 50),
+                        ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _getImage(ImageSource.camera),
+                        child: Text('Take Photo'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _getImage(ImageSource.gallery),
+                        child: Text('Choose from Gallery'),
+                      ),
+                    ],
                   ),
                   TextField(
                     decoration: InputDecoration(labelText: 'Title'),
@@ -81,6 +116,7 @@ class _HomepageState extends State<Homepage> {
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../pages/main_pages/profile.dart';
 import '../pages/main_pages/homepage.dart';
 import '../pages/main_pages/volunteership.dart';
+import '../pages/main_pages/calendar.dart';
 
 class CustomNavBar extends StatefulWidget {
   const CustomNavBar({super.key});
@@ -16,7 +17,7 @@ class _CustomNavBarState extends State<CustomNavBar> {
   final List<Widget> screens = const [
     Homepage(),
     Volunteership(),
-    Volunteership(),
+    Calendar(),
     Profile()
   ];
   @override
