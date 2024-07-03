@@ -77,12 +77,14 @@ class _VolunteershipState extends State<Volunteership> {
                   ),
                 ),
                 SizedBox(height: 8.0),
-                TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
+                Flexible(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                      ),
                     ),
                   ),
                 ),
