@@ -1,6 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
+import 'package:vlookup_v2/pages/main_pages/Splash.dart';
+
+enum Menu { edit, delete, logout }
+
+List<PopupMenuEntry<Menu>> getPopupMenuItems() {
+  return <PopupMenuEntry<Menu>>[
+    const PopupMenuItem<Menu>(
+      value: Menu.edit,
+      child: ListTile(
+        leading: Icon(Icons.edit),
+        title: Text('Edit Profile'),
+      ),
+    ),
+    const PopupMenuItem<Menu>(
+      value: Menu.delete,
+      child: ListTile(
+        leading: Icon(Icons.delete_outlined),
+        title: Text('Delete Account'),
+      ),
+    ),
+    const PopupMenuItem<Menu>(
+      value: Menu.logout,
+      child: ListTile(
+        leading: Icon(Icons.logout),
+        title: Text('Logout'),
+      ),
+    ),
+  ];
+}
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -53,6 +82,34 @@ class Profile extends StatelessWidget {
               ),
             ),
           ),
+
+          // Settings button with PopupMenuButton
+          Positioned(
+            top: 40,
+            right: 20,
+            child: PopupMenuButton<Menu>(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onSelected: (Menu item) {
+                // Handle the selected menu item
+                switch (item) {
+                  case Menu.edit:
+                    //add function to edit profile details
+                    break;
+                  case Menu.delete:
+                    //Function to delete account
+                    break;
+                  case Menu.logout:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Splash()),
+                    );
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => getPopupMenuItems(),
+            ),
+          ),
+
           Positioned(
             top: 299,
             left: 0,
@@ -72,7 +129,7 @@ class Profile extends StatelessWidget {
                 Text(
                   user.gender,
                   textAlign: TextAlign.center,
-                  style:const TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 18,
                   ),
@@ -113,17 +170,7 @@ class Profile extends StatelessWidget {
                     fontSize: 20,
                   ),
                 ),
-                
               ],
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              height: 56,
-              color: const Color.fromRGBO(93, 176, 116, 1),
             ),
           ),
         ],

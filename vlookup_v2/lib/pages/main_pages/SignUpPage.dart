@@ -5,7 +5,7 @@ import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
-  
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -39,7 +39,9 @@ class _SignUpPageState extends State<SignUpPage> {
   Future<void> _registerUser() async {
     if (!_termsAccepted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("You must accept the terms and policies to proceed.")),
+        const SnackBar(
+            content:
+                Text("You must accept the terms and policies to proceed.")),
       );
       return;
     }
@@ -58,11 +60,11 @@ class _SignUpPageState extends State<SignUpPage> {
     );
 
     if (response.statusCode == 200) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to register '))
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Failed to register ')));
     }
   }
 
@@ -78,7 +80,8 @@ class _SignUpPageState extends State<SignUpPage> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginPage())),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const LoginPage())),
             child: const Text('Login', style: TextStyle(color: Colors.green)),
           ),
         ],
@@ -130,7 +133,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
-                        items: <String>['Male', 'Female', 'Other'].map((String value) {
+                        items: <String>['Male', 'Female', 'Other']
+                            .map((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(value),
@@ -147,6 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
+                  keyboardType: TextInputType.number,
                   controller: _phoneController,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
@@ -157,6 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
                   decoration: InputDecoration(
                     labelText: 'Email',
@@ -181,7 +187,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                       icon: Icon(
-                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                     ),
                   ),
