@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:vlookup_v2/models/event_model.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -20,6 +22,9 @@ class _HomePageState extends State<HomePage> {
   String _errorMessage = '';
   File? _image;
   final ImagePicker _picker = ImagePicker();
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+  final TextEditingController dateTimeController = TextEditingController();
 
   @override
   void initState() {
@@ -70,11 +75,41 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  //Function that clears any image the user has taken when the form is closed
-  void resetImage() {
+  //Function that clears any image or date or location the user has taken when the form is closed
+  void reset() {
     setState(() {
       _image = null; // Reset the image when the form is closed
     });
+
+    dateTimeController
+        .clear(); // Reset the date and time when the form is closed
+  }
+
+  // Function that brings up date and time picker
+  Future<void> pickDateTime(
+      BuildContext context, StateSetter setModalState) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(3000),
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        setModalState(() {
+          selectedDate = pickedDate;
+          selectedTime = pickedTime;
+          dateTimeController.text =
+              '${DateFormat('dd MMM yyyy').format(selectedDate!)} ${selectedTime!.format(context)}';
+        });
+      }
+    }
   }
 
   //Function that brings up form for user to add a new event
@@ -86,7 +121,7 @@ class _HomePageState extends State<HomePage> {
         // ignore: deprecated_member_use
         return WillPopScope(
             onWillPop: () async {
-              resetImage();
+              reset();
               return true;
             },
             child: SingleChildScrollView(
@@ -151,17 +186,34 @@ class _HomePageState extends State<HomePage> {
                             decoration:
                                 InputDecoration(labelText: 'Description'),
                           ),
-                          ElevatedButton(
+                          if (dateTimeController.text.isEmpty)
+                            TextButton.icon(
+                              onPressed: () {
+                                pickDateTime(context, setModalState);
+                              },
+                              icon: const Icon(Icons.date_range_outlined),
+                              label: const Text('Add Date and Time'),
+                            )
+                          else
+                            TextButton.icon(
+                              onPressed: () {
+                                pickDateTime(context, setModalState);
+                              },
+                              icon: const Icon(Icons.date_range_outlined),
+                              label: Text(dateTimeController.text),
+                            ),
+                          TextButton.icon(
                             onPressed: () {
-                              //upload functionality
+                              //Loction picker;
                             },
-                            child: const Text('Upload Location'),
+                            icon: const Icon(Icons.location_on_sharp),
+                            label: const Text('Add Location'),
                           ),
                           ElevatedButton(
                             onPressed: () {
                               // Implement form submission
                               Navigator.pop(context);
-                              resetImage();
+                              reset();
                             },
                             child: const Text('Submit'),
                           ),
