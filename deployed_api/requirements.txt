@@ -1,0 +1,15 @@
+flask
+firebase-admin
+functions_framework
+google-cloud-firestore
+firestore
+python-dotenv
+bcrypt
+flask_cors
+google-cloud
+Werkzeug
+
+
+
+
+

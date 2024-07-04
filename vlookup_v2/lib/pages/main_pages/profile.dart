@@ -1,104 +1,132 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vlookup_v2/provider/user_provider.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Profile',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Profile'),
-        ),
-        body: Container(
-          width: 399,
-          height: 844,
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Stack(
-            children: <Widget>[
-              // Green background
-              Positioned(
-                  top: 0,
-                  left: -1,
-                  child: Container(
-                    width: 400,
-                    height: 245,
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(93, 176, 116, 1),
-                    ),
-                  )),
+    final user = Provider.of<UserProvider>(context).user;
+    if (user == null) return const Text('No user logged in');
 
-              // Profile picture
-              Positioned(
-                top: 128,
-                left: 120,
-                child: Container(
-                  width: 158,
-                  height: 158,
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color.fromRGBO(100, 100, 100, 0.15),
-                        offset: Offset(0, 4),
-                        blurRadius: 20,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 4,
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          // Background
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 245,
+              color: const Color.fromRGBO(93, 176, 116, 1),
+            ),
+          ),
+          // Profile picture and user info
+          Positioned(
+            top: 128,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Container(
+                width: 158,
+                height: 158,
+                decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromRGBO(100, 100, 100, 0.15),
+                      offset: Offset(0, 4),
+                      blurRadius: 20,
                     ),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/profile_picture.png'),
-                      fit: BoxFit.fitWidth,
-                    ),
-                    borderRadius: BorderRadius.circular(158),
+                  ],
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 4,
+                  ),
+                  shape: BoxShape.circle,
+                  image: const DecorationImage(
+                    image: AssetImage('/assets/images/profile.jpg'),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-
-              // Name
-              Positioned(
-                top: 299,
-                left: 88,
-                child: Text(
-                  'James Boateng',
+            ),
+          ),
+          Positioned(
+            top: 299,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Text(
+                  user.name,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 30,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-
-              // Green bar on the bottom
-              Positioned(
-                top: 788,
-                left: 0,
-                child: Container(
-                  width: 390,
-                  height: 56,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(93, 176, 116, 1),
+                const SizedBox(height: 5),
+                Text(
+                  user.gender,
+                  textAlign: TextAlign.center,
+                  style:const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 18,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 5),
+                Text(
+                  user.email,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  user.phone,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  user.bio,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  user.location,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                  ),
+                ),
+                
+              ],
+            ),
           ),
-        ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 56,
+              color: const Color.fromRGBO(93, 176, 116, 1),
+            ),
+          ),
+        ],
       ),
     );
   }
