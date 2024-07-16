@@ -1,4 +1,4 @@
-class Event {
+class AppEvent {
   final String event_id;
   final String title;
   final String email;
@@ -7,7 +7,7 @@ class Event {
   final String image;
   final String location;
 
-  Event({
+  AppEvent({
     required this.event_id,
     required this.title,
     required this.email,
@@ -18,8 +18,8 @@ class Event {
   });
 
   // Factory constructor for instantiating a new Event from a map structure
-  factory Event.fromJson(Map<String, dynamic> json) {
-    return Event(
+  factory AppEvent.fromJson(Map<String, dynamic> json) {
+    return AppEvent(
       event_id: json['event_id'] as String,
       title: json['title'] as String,
       email: json['email'] as String,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vlookup_v2/models/event_model.dart'; // Ensure this import matches the location of your Event model
 
 class EventDetailsPage extends StatefulWidget {
-  final Event event;
+  final AppEvent event;
 
   const EventDetailsPage({super.key, required this.event});
 

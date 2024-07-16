@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/models/event_model.dart';
@@ -8,6 +9,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:io';
+import 'package:add_2_calendar/add_2_calendar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,14 +19,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Event> _events = [];
+  List<AppEvent> _events = [];
   bool _isLoading = false;
   String _errorMessage = '';
   File? _image;
   final ImagePicker _picker = ImagePicker();
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
+  final TextEditingController titleController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateTimeController = TextEditingController();
+  final TextEditingController locationController = TextEditingController();
 
   @override
   void initState() {
@@ -46,7 +51,7 @@ class _HomePageState extends State<HomePage> {
         List<dynamic> jsonResponse = json.decode(response.body);
         setState(() {
           _events = jsonResponse
-              .map((data) => Event.fromJson(data as Map<String, dynamic>))
+              .map((data) => AppEvent.fromJson(data as Map<String, dynamic>))
               .toList();
           _isLoading = false;
         });
@@ -109,6 +114,22 @@ class _HomePageState extends State<HomePage> {
               '${DateFormat('dd MMM yyyy').format(selectedDate!)} ${selectedTime!.format(context)}';
         });
       }
+    }
+  }
+
+  // Function to add Calendar event to local calendar
+  void addEventToCalendar(title, description, location, dateTime) {
+    if(dateTime.text.isNotEmpty) {
+      final DateTime parsedDateTime = DateFormat('dd MMM yyyy HH:mm').parse(dateTime.text);
+      final Event event = Event(
+        title: title.text,
+        description: description.text,
+        location: location.text,
+        startDate: parsedDateTime,
+        endDate: parsedDateTime.add(const Duration(hours: 1)),
+        );
+
+      Add2Calendar.addEvent2Cal(event);
     }
   }
 
@@ -179,12 +200,14 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ],
                           ),
-                          const TextField(
-                            decoration: InputDecoration(labelText: 'Title'),
+                          TextField(
+                            decoration: const InputDecoration(labelText: 'Title'),
+                            controller: titleController,
                           ),
-                          const TextField(
+                          TextField(
                             decoration:
-                                InputDecoration(labelText: 'Description'),
+                                const InputDecoration(labelText: 'Description'),
+                            controller: descriptionController,
                           ),
                           if (dateTimeController.text.isEmpty)
                             TextButton.icon(
@@ -210,8 +233,13 @@ class _HomePageState extends State<HomePage> {
                             label: const Text('Add Location'),
                           ),
                           ElevatedButton(
-                            onPressed: () {
-                              // Implement form submission
+                            onPressed: () {                              
+                              // Add event to local calendar
+                              addEventToCalendar(titleController, descriptionController, locationController, dateTimeController);
+
+                              // TODO - Send content to API
+
+
                               Navigator.pop(context);
                               reset();
                             },
