@@ -119,18 +119,55 @@ class _HomePageState extends State<HomePage> {
 
   // Function to add Calendar event to local calendar
   void addEventToCalendar(title, description, location, dateTime) {
-    if(dateTime.text.isNotEmpty) {
-      final DateTime parsedDateTime = DateFormat('dd MMM yyyy HH:mm').parse(dateTime.text);
-      final Event event = Event(
+    if (dateTime.text.isEmpty || title.text.isEmpty) {
+
+      showAlert(context, "Missing Information",
+          "Please provide at least a Title and Date");
+      DateTime parsedDateTime = DateTime.now();
+        final Event event = Event(
         title: title.text,
-        description: description.text,
-        location: location.text,
+        description: description.text.isNotEmpty ? description : null,
+        location: location.text.isNotEmpty ? location : null,
         startDate: parsedDateTime,
         endDate: parsedDateTime.add(const Duration(hours: 1)),
-        );
+      );
+
+      Add2Calendar.addEvent2Cal(event);
+    } else {
+      DateTime parsedDateTime =
+          DateFormat('dd MMM yyyy HH:mm').parse(dateTime.text);
+        final Event event = Event(
+        title: title.text,
+        description: description.isNotEmpty ? description : null,
+        location: location.isNotEmpty ? location : null,
+        startDate: parsedDateTime,
+        endDate: parsedDateTime.add(const Duration(hours: 1)),
+      );
 
       Add2Calendar.addEvent2Cal(event);
     }
+
+  }
+
+  // Function to show alert if user doesn't fill all the required fields
+  void showAlert(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   //Function that brings up form for user to add a new event
@@ -201,8 +238,15 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           TextField(
-                            decoration: const InputDecoration(labelText: 'Title'),
-                            controller: titleController,
+                              decoration:
+                                  const InputDecoration(labelText: 'Title'),
+                              controller: titleController,
+                              
+                              ),
+                          TextField(
+                            decoration:
+                                const InputDecoration(labelText: 'Location'),
+                            controller: locationController,
                           ),
                           TextField(
                             decoration:
@@ -225,20 +269,16 @@ class _HomePageState extends State<HomePage> {
                               icon: const Icon(Icons.date_range_outlined),
                               label: Text(dateTimeController.text),
                             ),
-                          TextButton.icon(
-                            onPressed: () {
-                              //Loction picker;
-                            },
-                            icon: const Icon(Icons.location_on_sharp),
-                            label: const Text('Add Location'),
-                          ),
                           ElevatedButton(
-                            onPressed: () {                              
+                            onPressed: () {
                               // Add event to local calendar
-                              addEventToCalendar(titleController, descriptionController, locationController, dateTimeController);
+                              addEventToCalendar(
+                                  titleController,
+                                  descriptionController,
+                                  locationController,
+                                  dateTimeController);
 
                               // TODO - Send content to API
-
 
                               Navigator.pop(context);
                               reset();
@@ -353,7 +393,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.green,
           foregroundColor: Colors.black,
           onPressed: _showForm,
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ));
   }
 }
