@@ -5,11 +5,9 @@ import 'package:vlookup_v2/models/event_model.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
-import 'dart:io';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
-import 'package:add_2_calendar/add_2_calendar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,8 +22,7 @@ class _HomePageState extends State<HomePage> {
   String _errorMessage = '';
   final ImagePicker _picker = ImagePicker();
   final TextEditingController titleController = TextEditingController();
-  final TextEditingController descriptionController =
-      TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateTimeController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
 
@@ -66,7 +63,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-DateTime? _selectedDateTime;
+  DateTime? _selectedDateTime;
 
   Future<void> pickDateTime(
       BuildContext context, StateSetter setModalState) async {
@@ -98,26 +95,6 @@ DateTime? _selectedDateTime;
       }
     }
   }
-
-
-  void addEventToCalendar() {
-    final Event event = Event(
-      title: titleController.text,
-      description: descriptionController.text.isNotEmpty
-          ? descriptionController.text
-          : '',
-      location:
-          locationController.text.isNotEmpty ? locationController.text : '',
-      startDate: _selectedDateTime!,
-      endDate: _selectedDateTime!
-          .add(const Duration(hours: 2)), // Assume events last 2 hours
-    );
-
-    Add2Calendar.addEvent2Cal(event);
-  }
-
-
-
 
   Future<void> _createEvent() async {
     var uuid = Uuid();
@@ -172,7 +149,6 @@ DateTime? _selectedDateTime;
                 title: Text('Skip Image Upload'),
                 onTap: () {
                   Navigator.pop(context); // Close the modal bottom sheet
-                  addEventToCalendar(); // Add event to calendar without uploading image
                 },
               ),
             ],
@@ -194,13 +170,10 @@ DateTime? _selectedDateTime;
       var response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode == 200) {
         _showAlert('Image Uploaded', 'The image was successfully uploaded.');
-        addEventToCalendar(); // Add to calendar after successful image upload
       } else {
         _showAlert('Upload Failed', 'Failed to upload image.');
       }
-    } else {
-      addEventToCalendar(); // Add to calendar directly if no image is uploaded
-    }
+    } else {}
   }
 
   void _showForm() {
@@ -249,9 +222,6 @@ DateTime? _selectedDateTime;
       },
     );
   }
-
-
-
 
   void _resetFormFields() {
     titleController.clear();
