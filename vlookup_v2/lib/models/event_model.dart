@@ -6,6 +6,7 @@ class AppEvent {
   final String date;
   final String image;
   final String location;
+  final String phone;
 
   AppEvent({
     required this.event_id,
@@ -15,6 +16,7 @@ class AppEvent {
     required this.date,
     required this.image,
     required this.location,
+    required this.phone,
   });
 
   // Factory constructor for instantiating a new Event from a map structure
@@ -27,6 +29,7 @@ class AppEvent {
       date: json['date'] as String,
       image: json['image'] as String,
       location: json['location'] as String,
+      phone: json['phone'] as String,
     );
   }
 
@@ -40,6 +43,7 @@ class AppEvent {
       'date': date,
       'image': image,
       'location': location,
+      'phone': phone,
     };
   }
 }

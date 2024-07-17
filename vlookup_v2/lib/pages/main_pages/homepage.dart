@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController dateTimeController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -112,6 +113,7 @@ class _HomePageState extends State<HomePage> {
         'date': dateTimeController.text,
         'location': locationController.text,
         'email': userEmail,
+        'phone': phoneController.text,
       }),
     );
 
@@ -208,6 +210,10 @@ class _HomePageState extends State<HomePage> {
                         controller: locationController,
                         decoration: InputDecoration(labelText: 'Location'),
                       ),
+                      TextField(
+                        controller: phoneController,
+                        decoration: InputDecoration(labelText: 'Phone'),
+                      ),
                       ElevatedButton(
                         onPressed: _createEvent,
                         child: Text('Create Event'),
@@ -228,6 +234,7 @@ class _HomePageState extends State<HomePage> {
     descriptionController.clear();
     dateTimeController.clear();
     locationController.clear();
+    phoneController.clear();
   }
 
   void _showAlert(String title, String message) {
