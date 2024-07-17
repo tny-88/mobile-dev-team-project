@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage> {
         'date': dateTimeController.text,
         'location': locationController.text,
         'email': userEmail,
-        'phone': phoneController.text,
+        'phone_number': phoneController.text,
       }),
     );
 
