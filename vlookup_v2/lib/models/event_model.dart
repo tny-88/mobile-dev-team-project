@@ -29,7 +29,7 @@ class AppEvent {
       date: json['date'] as String,
       image: json['image'] as String,
       location: json['location'] as String,
-      phone: json['phone'] as String,
+      phone: json['phone_number'] as String,
     );
   }
 
@@ -43,7 +43,7 @@ class AppEvent {
       'date': date,
       'image': image,
       'location': location,
-      'phone': phone,
+      'phone_number': phone,
     };
   }
 }
