@@ -36,8 +36,7 @@ class _LoginPageState extends State<LoginPage> {
       Provider.of<UserProvider>(context, listen: false).setUser(user);
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Login failed')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Login failed')));
     }
 
     setState(() {
@@ -67,10 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: 'Email',
                     border: OutlineInputBorder(),
                   ),
-                  validator: (value) =>
-                      value != null && value.isNotEmpty && value.contains('@')
-                          ? null
-                          : 'Enter a valid email',
+                  validator: (value) => value != null && value.isNotEmpty && value.contains('@') ? null : 'Enter a valid email',
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
@@ -80,16 +76,11 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: 'Password',
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
-                      icon: Icon(_obscureText
-                          ? Icons.visibility_off
-                          : Icons.visibility),
-                      onPressed: () =>
-                          setState(() => _obscureText = !_obscureText),
+                      icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+                      onPressed: () => setState(() => _obscureText = !_obscureText),
                     ),
                   ),
-                  validator: (value) => value != null && value.isNotEmpty
-                      ? null
-                      : 'Enter your password',
+                  validator: (value) => value != null && value.isNotEmpty ? null : 'Enter your password',
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
@@ -97,13 +88,8 @@ class _LoginPageState extends State<LoginPage> {
                     if (_formKey.currentState?.validate() ?? false) {
                       _login(_emailController.text, _passwordController.text);
                     }
-
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/home', (Route<dynamic> route) => false);
                   },
-                  child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Login'),
+                  child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text('Login'),
                 ),
               ],
             ),
