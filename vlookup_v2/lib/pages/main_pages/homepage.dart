@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
+import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -281,7 +282,12 @@ class _HomePageState extends State<HomePage> {
                       title: Text(event.title),
                       subtitle: Text(event.description),
                       onTap: () {
-                        // Add navigation or other interaction
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => EventDetailsPage(event: event),
+                          ),
+                        );
                       },
                     );
                   },
