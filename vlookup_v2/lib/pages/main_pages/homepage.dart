@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -176,7 +177,9 @@ class _HomePageState extends State<HomePage> {
       } else {
         _showAlert('Upload Failed', 'Failed to upload image.');
       }
-    } else {}
+    } else {
+      _showAlert('Image Upload Canceled', 'No image was selected.');
+    }
   }
 
   void _showForm() {
@@ -259,6 +262,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    dateTimeController.dispose();
+    locationController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -275,26 +288,104 @@ class _HomePageState extends State<HomePage> {
           : _errorMessage.isNotEmpty
               ? Center(child: Text(_errorMessage))
               : ListView.builder(
+                  padding: const EdgeInsets.all(8.0),
                   itemCount: _events.length,
                   itemBuilder: (context, index) {
                     final event = _events[index];
-                    return ListTile(
-                      title: Text(event.title),
-                      subtitle: Text(event.description),
-                      onTap: () {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(
-                            builder: (context) => EventDetailsPage(event: event),
-                          ),
-                        );
-                      },
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context, 
+                            MaterialPageRoute(
+                              builder: (context) => EventDetailsPage(event: event),
+                            ),
+                          );
+                        },
+                        child: HomepageCard(
+                          imagePath: event.image,
+                          title: event.title,
+                          description: event.description,
+                        ),
+                      ),
                     );
                   },
                 ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showForm,
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+}
+
+//This class is meant to hold the data for the each location and to be used and create a card for them
+class HomepageCard extends StatelessWidget {
+  final String imagePath;
+  final String title;
+  final String description;
+
+  const HomepageCard({
+    required this.imagePath,
+    required this.title,
+    required this.description,
+    Key? key,
+  }): super(key: key);
+  
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          Image.network(
+            imagePath,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 200,
+            errorBuilder: (context, error, stackTrace) {
+               return Container(
+                width: double.infinity,
+                height: 200,
+                color: Colors.grey[300],
+                child: Icon(Icons.error, color: Colors.red),
+              );
+            },
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.black54,
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
