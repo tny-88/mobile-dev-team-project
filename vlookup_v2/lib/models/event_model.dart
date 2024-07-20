@@ -46,4 +46,27 @@ class AppEvent {
       'phone_number': phone,
     };
   }
+
+  // Creates a copy of the current event with updated fields
+  AppEvent copyWith({
+    String? event_id,
+    String? title,
+    String? email,
+    String? description,
+    String? date,
+    String? image,
+    String? location,
+    String? phone,
+  }) {
+    return AppEvent(
+      event_id: event_id ?? this.event_id,
+      title: title ?? this.title,
+      email: email ?? this.email,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      image: image ?? this.image,
+      location: location ?? this.location,
+      phone: phone ?? this.phone,
+    );
+  }
 }

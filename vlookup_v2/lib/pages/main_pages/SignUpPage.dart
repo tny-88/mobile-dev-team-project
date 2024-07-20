@@ -13,9 +13,10 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   DateTime? _selectedDate;
-  bool _newsletter = false;
   bool _termsAccepted = false;
   bool _obscurePassword = true;
+  bool _isLoading = false;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -46,6 +47,10 @@ class _SignUpPageState extends State<SignUpPage> {
       return;
     }
 
+    setState(() {
+      _isLoading = true;
+    });
+
     final response = await http.post(
       Uri.parse('https://vlookup-api.ew.r.appspot.com/create_user'),
       headers: {'Content-Type': 'application/json'},
@@ -56,15 +61,20 @@ class _SignUpPageState extends State<SignUpPage> {
         'phone': _phoneController.text,
         'gender': _gender,
         'dob': _selectedDate?.toIso8601String() ?? '',
+        'profileImage': 'assets/images/profile.jpg', // Default profile image
       }),
     );
+
+    setState(() {
+      _isLoading = false;
+    });
 
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => LoginPage()));
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Failed to register ')));
+          .showSnackBar(const SnackBar(content: Text('Failed to register')));
     }
   }
 
@@ -111,7 +121,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         readOnly: true,
                         decoration: InputDecoration(
                           labelText: 'Date of Birth',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
@@ -129,7 +139,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         value: _gender,
                         decoration: InputDecoration(
                           labelText: 'Gender',
-                          border: OutlineInputBorder(),
+                          border: const OutlineInputBorder(),
                           filled: true,
                           fillColor: Colors.grey[200],
                         ),
@@ -155,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   controller: _phoneController,
                   decoration: InputDecoration(
                     labelText: 'Phone Number',
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     filled: true,
                     fillColor: Colors.grey[200],
                   ),
@@ -213,17 +223,22 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: _registerUser,
+                  onPressed: _isLoading ? null : _registerUser,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 93, 176, 117),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text(
+                          'Sign Up',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ],
             ),

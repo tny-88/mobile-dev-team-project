@@ -7,14 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
-class Volunteership extends StatefulWidget {
-  const Volunteership({super.key});
+class EventCreatorPage extends StatefulWidget {
+  const EventCreatorPage({super.key});
 
   @override
-  State<Volunteership> createState() => _VolunteershipState();
+  State<EventCreatorPage> createState() => _EventCreatorPageState();
 }
 
-class _VolunteershipState extends State<Volunteership> {
+class _EventCreatorPageState extends State<EventCreatorPage> {
   List<AppEvent> _events = [];
   bool _isLoading = false;
   String _errorMessage = '';
@@ -39,7 +39,7 @@ class _VolunteershipState extends State<Volunteership> {
     try {
       final response = await http.get(
         Uri.parse(
-            'https://vlookup-api.ew.r.appspot.com/get_volunteerships/${user.email}'),
+            'https://vlookup-api.ew.r.appspot.com/get_user_events/${user.email}'),
       );
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = json.decode(response.body);
@@ -105,7 +105,7 @@ class _VolunteershipState extends State<Volunteership> {
                       fit: BoxFit.fitHeight,
                     ),
                     const Text(
-                      'Enrolled \n Opportunities',
+                      'Created Events',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -115,7 +115,7 @@ class _VolunteershipState extends State<Volunteership> {
                     ),
                     TextButton(
                       onPressed: () {
-                        // Logic for filtering volunteer cards
+                        // Logic for filtering events
                       },
                       child: const Text(
                         'Filter',
@@ -127,18 +127,6 @@ class _VolunteershipState extends State<Volunteership> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8.0),
-                Flexible(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -149,34 +137,31 @@ class _VolunteershipState extends State<Volunteership> {
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage.isNotEmpty
                 ? Center(child: Text(_errorMessage))
-                : RefreshIndicator(
-                    onRefresh: _fetchEvents,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount: _events.length,
-                      itemBuilder: (context, index) {
-                        final event = _events[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      EventDetailsPage(event: event),
-                                ),
-                              );
-                            },
-                            child: VolunteershipCard(
-                              imagePath: event.image,
-                              title: event.title,
-                              description: event.description,
-                            ),
+                : ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: _events.length,
+                    itemBuilder: (context, index) {
+                      final event = _events[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventDetailsPage(event: event),
+                              ),
+                            );
+                          },
+                          child: EventCard(
+                            imagePath: event.image,
+                            title: event.title,
+                            description: event.description,
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    },
                   ),
       ),
     );
@@ -184,12 +169,12 @@ class _VolunteershipState extends State<Volunteership> {
 }
 
 // This class is meant to hold the data for each event and create a card for them
-class VolunteershipCard extends StatelessWidget {
+class EventCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String description;
 
-  const VolunteershipCard({
+  const EventCard({
     required this.imagePath,
     required this.title,
     required this.description,
@@ -205,8 +190,10 @@ class VolunteershipCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          Image.network(
-            imagePath,
+          Image(
+            image: imagePath.startsWith('assets/')
+                ? AssetImage(imagePath)
+                : NetworkImage(imagePath) as ImageProvider,
             fit: BoxFit.cover,
             width: double.infinity,
             height: 200,

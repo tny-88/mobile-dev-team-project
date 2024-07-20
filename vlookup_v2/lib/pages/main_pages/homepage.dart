@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -100,7 +99,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _createEvent() async {
-    var uuid = Uuid();
+    // Ensure all required fields are filled before creating an event
+    if (titleController.text.isEmpty ||
+        descriptionController.text.isEmpty ||
+        dateTimeController.text.isEmpty ||
+        locationController.text.isEmpty ||
+        phoneController.text.isEmpty) {
+      _showAlert('Missing Information', 'Please fill out all fields.');
+      return;
+    }
+
+    var uuid = const Uuid();
     String eventId = uuid.v4();
     String userEmail =
         Provider.of<UserProvider>(context, listen: false).user?.email ?? "";
@@ -116,20 +125,23 @@ class _HomePageState extends State<HomePage> {
         'location': locationController.text,
         'email': userEmail,
         'phone_number': phoneController.text,
+        'image': 'assets/images/default_event_image.jpg', // Default image path
       }),
     );
 
     if (response.statusCode == 200) {
-      _promptForImageUpload(eventId);
-      _resetFormFields();
-      _fetchEvents();
+      Navigator.pop(
+          context); // Dismiss the bottom sheet right after successful creation
+      _promptForImageUpload(eventId); // Then prompt for image upload
+      _resetFormFields(); // Reset the form fields for next use
+      _fetchEvents(); // Refresh the list of events
     } else {
       _showAlert(
           'Failed to Create Event', 'Something went wrong. Please try again.');
     }
   }
 
-  void _promptForImageUpload(String eventId) async {
+  void _promptForImageUpload(String eventId) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -141,18 +153,25 @@ class _HomePageState extends State<HomePage> {
               ListTile(
                 leading: Icon(Icons.camera_alt),
                 title: Text('Take Photo'),
-                onTap: () => _getImage(ImageSource.camera, eventId),
+                onTap: () {
+                  Navigator.pop(context); // Close the menu
+                  _getImage(ImageSource.camera, eventId);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.photo_library),
                 title: Text('Pick from Gallery'),
-                onTap: () => _getImage(ImageSource.gallery, eventId),
+                onTap: () {
+                  Navigator.pop(context); // Close the menu
+                  _getImage(ImageSource.gallery, eventId);
+                },
               ),
               ListTile(
                 leading: Icon(Icons.cancel),
                 title: Text('Skip Image Upload'),
                 onTap: () {
-                  Navigator.pop(context); // Close the modal bottom sheet
+                  Navigator.pop(
+                      context); // Close the menu without uploading an image
                 },
               ),
             ],
@@ -163,7 +182,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _getImage(ImageSource source, String eventId) async {
-    Navigator.pop(context); // Close the modal bottom sheet
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       var uri = Uri.parse(
@@ -276,42 +294,40 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Homepage'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _fetchEvents,
-          ),
-        ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _errorMessage.isNotEmpty
-              ? Center(child: Text(_errorMessage))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: _events.length,
-                  itemBuilder: (context, index) {
-                    final event = _events[index];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(
-                              builder: (context) => EventDetailsPage(event: event),
-                            ),
-                          );
-                        },
-                        child: HomepageCard(
-                          imagePath: event.image,
-                          title: event.title,
-                          description: event.description,
+      body: RefreshIndicator(
+        onRefresh: _fetchEvents,
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _errorMessage.isNotEmpty
+                ? Center(child: Text(_errorMessage))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: _events.length,
+                    itemBuilder: (context, index) {
+                      final event = _events[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EventDetailsPage(event: event),
+                              ),
+                            );
+                          },
+                          child: HomepageCard(
+                            imagePath: event.image,
+                            title: event.title,
+                            description: event.description,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showForm,
         child: const Icon(Icons.add),
@@ -330,9 +346,9 @@ class HomepageCard extends StatelessWidget {
     required this.imagePath,
     required this.title,
     required this.description,
-    Key? key,
-  }): super(key: key);
-  
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -342,20 +358,27 @@ class HomepageCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
-          Image.network(
-            imagePath,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 200,
-            errorBuilder: (context, error, stackTrace) {
-               return Container(
-                width: double.infinity,
-                height: 200,
-                color: Colors.grey[300],
-                child: Icon(Icons.error, color: Colors.red),
-              );
-            },
-          ),
+          imagePath.startsWith('assets/')
+              ? Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 200,
+                )
+              : Image.network(
+                  imagePath,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 200,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 200,
+                      color: Colors.grey[300],
+                      child: const Icon(Icons.error, color: Colors.red),
+                    );
+                  },
+                ),
           Positioned(
             bottom: 0,
             left: 0,
