@@ -1,0 +1,7 @@
+Make sure you have installed:
+flutter pub add add_2_calendar
+flutter pub add provider
+flutter pub add date_time_picker
+flutter pub add intl
+flutter pub add uuid
+flutter pub add http
