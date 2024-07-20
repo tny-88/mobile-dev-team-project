@@ -50,7 +50,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title:
+            const Text('Login', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Padding(
@@ -61,6 +62,7 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 60),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
@@ -73,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? null
                           : 'Enter a valid email',
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 80),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscureText,
@@ -92,16 +94,20 @@ class _LoginPageState extends State<LoginPage> {
                       ? null
                       : 'Enter your password',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 130),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
                       _login(_emailController.text, _passwordController.text);
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 93, 176, 117),
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Login'),
+                      : const Text('Login', style: TextStyle(color: Colors.white),),
                 ),
               ],
             ),
