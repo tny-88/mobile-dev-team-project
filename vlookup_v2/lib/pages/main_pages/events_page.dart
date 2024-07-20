@@ -570,6 +570,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                           _isLoading ? null : _deleteEvent,
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.red,
+                                        foregroundColor: Colors.white,
                                         textStyle:
                                             const TextStyle(fontSize: 18),
                                       ),
@@ -581,6 +582,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                             )
                                           : const Text('Delete Event'),
                                     ),
+
                                   ],
                                 ),
                               ),

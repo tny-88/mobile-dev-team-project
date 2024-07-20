@@ -291,40 +291,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70.0),
-        child: AppBar(
-          elevation: 0,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text(
-                      'Welcome User',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    const Spacer(),
-                    Image.asset(
-                      'assets/images/Logo.png',
-                      height: 50,
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ],
-                ),
-              ],
+      appBar: AppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Welcome ${user?.name ?? ''}'),
+            const Text(
+              'Browse the available events',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w300),
             ),
-          ),
+          ],
         ),
       ),
       body: RefreshIndicator(
