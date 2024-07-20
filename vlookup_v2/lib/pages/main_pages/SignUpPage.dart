@@ -86,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
           icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Sign Up', style: TextStyle(color: Colors.black)),
+        title: const Text('Sign Up', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [
           TextButton(
@@ -113,7 +113,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40),
                 Row(
                   children: [
                     Expanded(
@@ -133,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 16.0),
+                    const SizedBox(width: 25.0),
                     Expanded(
                       child: DropdownButtonFormField<String>(
                         value: _gender,
@@ -159,7 +159,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40.0),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   controller: _phoneController,
@@ -170,7 +170,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40.0),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
@@ -181,7 +181,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     fillColor: Colors.grey[200],
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40.0),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
@@ -204,7 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40.0),
                 Row(
                   children: [
                     Checkbox(
@@ -221,7 +221,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16.0),
+                const SizedBox(height: 40.0),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _registerUser,
                   style: ElevatedButton.styleFrom(
