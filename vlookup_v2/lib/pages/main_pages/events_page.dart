@@ -7,6 +7,7 @@ import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
 
 class EventDetailsPage extends StatefulWidget {
   final AppEvent event;
@@ -14,10 +15,10 @@ class EventDetailsPage extends StatefulWidget {
   const EventDetailsPage({super.key, required this.event});
 
   @override
-  _EventDetailsPageState createState() => _EventDetailsPageState();
+  EventDetailsPageState createState() => EventDetailsPageState();
 }
 
-class _EventDetailsPageState extends State<EventDetailsPage> {
+class EventDetailsPageState extends State<EventDetailsPage> {
   bool _isLoading = false;
   int _volunteerCount = 0;
   final ImagePicker _picker = ImagePicker();
@@ -390,6 +391,27 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     }
   }
 
+  void addEventToCalendar(inputEvent) {
+    DateTime parsedDateTime =
+        DateFormat('dd MM yyyy h:mm').parse(inputEvent.date);
+    final Event event = Event(
+      title: inputEvent.title,
+      description: inputEvent.description,
+      // .isNotEmpty ? description : null,
+      location: inputEvent.location,
+      // .isNotEmpty ? location : null,
+      startDate: parsedDateTime,
+      endDate: parsedDateTime.add(const Duration(hours: 1)),
+    );
+
+    Add2Calendar.addEvent2Cal(event);
+  }
+
+  String viewDateTime(String date) {
+    DateTime parsedDate = DateFormat('dd MM yyyy h:mm').parse(date);
+    return DateFormat('MMMM dd, yyyy h:mm a').format(parsedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -497,7 +519,44 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                 ),
                               ],
                             ),
-
+                            const SizedBox(height: 16),
+                            // Event Phone Number with Call Icon
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  widget.event.phone,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      launchPhoneDialer(widget.event.phone);
+                                    },
+                                    child: const Icon(Icons.call)),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  viewDateTime(widget.event.date),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    addEventToCalendar(widget.event.date);
+                                  },
+                                  child: const Icon(Icons.calendar_month),
+                                )
+                              ],
+                            ),
                             const SizedBox(height: 16),
                             // Number of Volunteers
                             Text(
@@ -508,26 +567,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            // Event Phone Number with Call Icon
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton.icon(
-                                  icon: Icon(Icons.phone, color: Colors.green),
-                                  label: Text(
-                                    widget.event.phone,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    launchPhoneDialer(widget.event.phone);
-                                  },
-                                ),
-                              ],
-                            ),
                             if (isCreator)
                               Padding(
                                 padding: const EdgeInsets.only(top: 16.0),
@@ -537,6 +576,11 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                     ElevatedButton(
                                       onPressed:
                                           _isLoading ? null : _deleteEvent,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        textStyle:
+                                            const TextStyle(fontSize: 18),
+                                      ),
                                       child: _isLoading
                                           ? const CircularProgressIndicator(
                                               valueColor:
@@ -544,11 +588,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                                       Colors.white),
                                             )
                                           : const Text('Delete Event'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.red,
-                                        textStyle:
-                                            const TextStyle(fontSize: 18),
-                                      ),
                                     ),
                                   ],
                                 ),
@@ -568,18 +607,18 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _volunteer,
-                      child: _isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : const Text('Volunteer'),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.green,
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         textStyle: const TextStyle(fontSize: 18),
                       ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text('Volunteer'),
                     ),
                   ),
                 ),
