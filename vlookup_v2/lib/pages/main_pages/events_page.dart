@@ -396,10 +396,9 @@ class EventDetailsPageState extends State<EventDetailsPage> {
         DateFormat('dd MM yyyy h:mm').parse(inputEvent.date);
     final Event event = Event(
       title: inputEvent.title,
-      description: inputEvent.description,
-      // .isNotEmpty ? description : null,
-      location: inputEvent.location,
-      // .isNotEmpty ? location : null,
+      description:
+          inputEvent.description.isNotEmpty ? inputEvent.description : null,
+      location: inputEvent.location.isNotEmpty ? inputEvent.location : null,
       startDate: parsedDateTime,
       endDate: parsedDateTime.add(const Duration(hours: 1)),
     );
@@ -469,13 +468,6 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  _formattedDate(widget.event.date),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -486,7 +478,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                 fontSize: 16,
                                 color: Colors.black87,
                               ),
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.left,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -551,7 +543,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                 ),
                                 ElevatedButton(
                                   onPressed: () {
-                                    addEventToCalendar(widget.event.date);
+                                    addEventToCalendar(widget.event);
                                   },
                                   child: const Icon(Icons.calendar_month),
                                 )
