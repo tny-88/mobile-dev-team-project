@@ -4,6 +4,7 @@ import 'package:vlookup_v2/models/event_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 
@@ -377,6 +378,18 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     );
   }
 
+  void launchPhoneDialer(String phoneNumber) async {
+    final Uri phoneUri = Uri(
+      scheme: 'tel',
+      path: phoneNumber,
+    );
+    if (await launchUrl(phoneUri)) {
+    } else {
+      // Handle the error, for example by showing a message to the user
+      print('Could not launch dialer');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -409,9 +422,9 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                               fit: BoxFit.cover,
                             ),
                       Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: const BorderRadius.only(
+                          borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20),
                           ),
@@ -453,22 +466,38 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 16),
-                            // Event Phone Number with Call Icon
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Icon(Icons.phone, color: Colors.green),
-                                const SizedBox(width: 8),
-                                Text(
-                                  widget.event.phone,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
+                                TextButton.icon(
+                                  icon: const Icon(
+                                    Icons.location_pin,
+                                    color: Colors.green,
                                   ),
+                                  label: Text(
+                                    widget.event.location,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    launchUrl(Uri.parse(
+                                        'https://www.google.com/maps/search/?api=1&query=${widget.event.location}'));
+                                  },
+                                ),
+                                const Spacer(),
+                                const Spacer(),
+                                IconButton(
+                                  icon: const Icon(Icons.edit,
+                                      color: Colors.green),
+                                  onPressed: () {
+                                    _showEditForm(context);
+                                  },
                                 ),
                               ],
                             ),
+
                             const SizedBox(height: 16),
                             // Number of Volunteers
                             Text(
@@ -479,20 +508,31 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
+                            const SizedBox(height: 16),
+                            // Event Phone Number with Call Icon
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                TextButton.icon(
+                                  icon: Icon(Icons.phone, color: Colors.green),
+                                  label: Text(
+                                    widget.event.phone,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    launchPhoneDialer(widget.event.phone);
+                                  },
+                                ),
+                              ],
+                            ),
                             if (isCreator)
                               Padding(
                                 padding: const EdgeInsets.only(top: 16.0),
                                 child: Column(
                                   children: [
-                                    ElevatedButton(
-                                      onPressed: () => _showEditForm(context),
-                                      child: const Text('Edit Event'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.blue,
-                                        textStyle:
-                                            const TextStyle(fontSize: 18),
-                                      ),
-                                    ),
                                     const SizedBox(height: 8),
                                     ElevatedButton(
                                       onPressed:

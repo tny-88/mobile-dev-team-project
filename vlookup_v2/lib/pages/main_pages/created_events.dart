@@ -88,7 +88,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(150.0),
+        preferredSize: const Size.fromHeight(70.0),
         child: AppBar(
           elevation: 0,
           flexibleSpace: Padding(
@@ -97,15 +97,12 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image.asset(
-                      'assets/images/Logo.png',
-                      height: 50,
-                      fit: BoxFit.fitHeight,
-                    ),
+                    const Spacer(),
+                    const Spacer(),
                     const Text(
-                      'Created Events',
+                      'Created \n Events',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -113,17 +110,11 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        // Logic for filtering events
-                      },
-                      child: const Text(
-                        'Filter',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 16.0,
-                        ),
-                      ),
+                    const Spacer(),
+                    Image.asset(
+                      'assets/images/Logo.png',
+                      height: 50,
+                      fit: BoxFit.fitHeight,
                     ),
                   ],
                 ),

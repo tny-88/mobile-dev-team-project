@@ -88,7 +88,7 @@ class _VolunteershipState extends State<Volunteership> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(150.0),
+        preferredSize: const Size.fromHeight(85.0),
         child: AppBar(
           elevation: 0,
           flexibleSpace: Padding(
@@ -97,13 +97,10 @@ class _VolunteershipState extends State<Volunteership> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Image.asset(
-                      'assets/images/Logo.png',
-                      height: 50,
-                      fit: BoxFit.fitHeight,
-                    ),
+                    const Spacer(),
+                    const Spacer(),
                     const Text(
                       'Enrolled \n Opportunities',
                       textAlign: TextAlign.center,
@@ -113,31 +110,13 @@ class _VolunteershipState extends State<Volunteership> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        // Logic for filtering volunteer cards
-                      },
-                      child: const Text(
-                        'Filter',
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 16.0,
-                        ),
-                      ),
+                    const Spacer(),
+                    Image.asset(
+                      'assets/images/Logo.png',
+                      height: 50,
+                      fit: BoxFit.fitHeight,
                     ),
                   ],
-                ),
-                const SizedBox(height: 8.0),
-                Flexible(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
 import 'package:vlookup_v2/pages/main_pages/SignUpPage.dart';
-import 'package:vlookup_v2/pages/main_pages/splash.dart';
+import 'package:vlookup_v2/pages/main_pages/SplashOptionsPage.dart';
 import 'package:vlookup_v2/widgets/custom_nav_bar.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 
@@ -24,12 +24,12 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
           useMaterial3: true,
         ),
-        initialRoute: '/',  // Initial route is usually the splash or login page
+        initialRoute: '/', // Initial route is usually the splash or login page
         routes: {
-          '/': (context) => const Splash(),
+          '/': (context) => const SplashOptions(),
           '/login': (context) => const LoginPage(),
           '/signup': (context) => const SignUpPage(),
-          '/home': (context) => const CustomNavBar(),  // Directs here post-login
+          '/home': (context) => const CustomNavBar(), // Directs here post-login
         },
       ),
     );

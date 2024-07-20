@@ -3,8 +3,37 @@ import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:provider/provider.dart';
+import 'package:vlookup_v2/pages/main_pages/SplashOptionsPage.dart';
 import 'package:vlookup_v2/pages/main_pages/created_events.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
+
+enum Menu { edit, change_password, logout }
+
+List<PopupMenuEntry<Menu>> getPopupMenuItems() {
+  return <PopupMenuEntry<Menu>>[
+    const PopupMenuItem<Menu>(
+      value: Menu.edit,
+      child: ListTile(
+        leading: Icon(Icons.edit),
+        title: Text('Edit Profile'),
+      ),
+    ),
+    const PopupMenuItem<Menu>(
+      value: Menu.change_password,
+      child: ListTile(
+        leading: Icon(Icons.password_rounded),
+        title: Text('Change Password'),
+      ),
+    ),
+    const PopupMenuItem<Menu>(
+      value: Menu.logout,
+      child: ListTile(
+        leading: Icon(Icons.logout),
+        title: Text('Logout'),
+      ),
+    ),
+  ];
+}
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -433,6 +462,32 @@ class _ProfileState extends State<Profile> {
             ),
           ),
           Positioned(
+            top: 40,
+            right: 20,
+            child: PopupMenuButton<Menu>(
+              icon: const Icon(Icons.settings, color: Colors.white),
+              onSelected: (Menu item) {
+                // Handle the selected menu item
+                switch (item) {
+                  case Menu.edit:
+                    _showEditDetailsForm(context);
+                    break;
+                  case Menu.change_password:
+                    _showChangePasswordForm(context);
+                    break;
+                  case Menu.logout:
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SplashOptions()),
+                    );
+                    break;
+                }
+              },
+              itemBuilder: (BuildContext context) => getPopupMenuItems(),
+            ),
+          ),
+          Positioned(
             top: 299,
             left: 0,
             right: 0,
@@ -490,15 +545,6 @@ class _ProfileState extends State<Profile> {
                     'View Created Events',
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => _showEditDetailsForm(context),
-                  child: const Text('Edit Details'),
-                ),
-                ElevatedButton(
-                  onPressed: () => _showChangePasswordForm(context),
-                  child: const Text('Change Password'),
                 ),
               ],
             ),
