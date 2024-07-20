@@ -8,7 +8,7 @@ bcrypt
 flask_cors
 google-cloud
 Werkzeug
-
+Flask-Uploads
 
 
 
