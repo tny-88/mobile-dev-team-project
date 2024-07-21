@@ -496,6 +496,14 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     ),
                                   ),
                                 ),
+                                Text(
+                                  viewDateTime(widget.event.date),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 149, 149, 149),
+                                  ),
+                                ),
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -508,16 +516,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                               ),
                               textAlign: TextAlign.left,
                             ),
-                            const SizedBox(height: 8),
-                            //Creator of event text
-                            Text(
-                              'Created by: ${widget.event.email}',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold
-                              ),
-                            ),
+
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -550,43 +549,14 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                   ),
                               ],
                             ),
-                            const SizedBox(height: 16),
-                            // Event Phone Number with Call Icon
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  widget.event.phone,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      launchPhoneDialer(widget.event.phone);
-                                    },
-                                    child: const Icon(Icons.call)),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  viewDateTime(widget.event.date),
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    addEventToCalendar(widget.event);
-                                  },
-                                  child: const Icon(Icons.calendar_month),
-                                )
-                              ],
+                            const SizedBox(height: 8),
+                            //Creator of event text
+                            Text(
+                              'Created by: ${widget.event.email}',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 16),
                             // Number of Volunteers
@@ -597,6 +567,56 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            const SizedBox(height: 16),
+                            // Event Phone Number with Call Icon
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Contact Us',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      launchPhoneDialer(widget.event.phone);
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      elevation:
+                                          2, // button's elevation when it's pressed
+                                    ),
+                                    child: const Icon(
+                                      Icons.call,
+                                    )),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Add event to your calendar',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    addEventToCalendar(widget.event);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    elevation:
+                                        2, // button's elevation when it's pressed
+                                  ),
+                                  child: const Icon(Icons.calendar_month),
+                                )
+                              ],
                             ),
                             if (isCreator)
                               Padding(
@@ -661,7 +681,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
             top: 40,
             left: 10,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.black),
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),

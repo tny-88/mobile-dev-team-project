@@ -235,6 +235,7 @@ class _HomePageState extends State<HomePage> {
                         decoration: InputDecoration(labelText: 'Location'),
                       ),
                       TextField(
+                        keyboardType: TextInputType.phone,
                         controller: phoneController,
                         decoration: InputDecoration(labelText: 'Phone'),
                       ),
@@ -452,6 +453,8 @@ class HomepageCard extends StatelessWidget {
                   ),
                   Text(
                     description,
+                    maxLines: 2, // Limit descriptions 2 lines
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,

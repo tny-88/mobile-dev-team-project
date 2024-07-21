@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
+import 'package:vlookup_v2/pages/main_pages/terms_and_policy_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -87,7 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text('Sign Up',
@@ -256,9 +257,31 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                     ),
-                    const Text(
-                      'I accept the terms and conditions.',
-                      style: TextStyle(fontSize: 12.0),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsAndPolicyPage(),
+                          ),
+                        );
+                      },
+                      child: const Text.rich(
+                        TextSpan(
+                          text: 'I understand the ',
+                          style: TextStyle(fontSize: 15.0, color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: 'terms & policy.',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
