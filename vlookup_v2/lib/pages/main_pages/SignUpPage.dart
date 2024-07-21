@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
-import 'package:vlookup_v2/pages/main_pages/terms_and_policy_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -14,7 +13,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   DateTime? _selectedDate;
-  bool _NewsletterAccepted = false;
   bool _termsAccepted = false;
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -40,6 +38,10 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> _registerUser() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     if (!_termsAccepted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -83,11 +85,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 12, 12, 12),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.close, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text('Sign Up',
@@ -117,6 +117,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     filled: true,
                     fillColor: Colors.grey[200],
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your name';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40),
                 Row(
@@ -136,6 +142,12 @@ class _SignUpPageState extends State<SignUpPage> {
                               ? ''
                               : "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
                         ),
+                        validator: (value) {
+                          if (_selectedDate == null) {
+                            return 'Please select your date of birth';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                     const SizedBox(width: 25.0),
@@ -160,6 +172,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             _gender = value;
                           });
                         },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please select your gender';
+                          }
+                          return null;
+                        },
                       ),
                     ),
                   ],
@@ -174,6 +192,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     filled: true,
                     fillColor: Colors.grey[200],
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40.0),
                 TextFormField(
@@ -185,6 +209,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     filled: true,
                     fillColor: Colors.grey[200],
                   ),
+                  validator: (value) {
+                    if (value == null || !value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40.0),
                 TextFormField(
@@ -208,6 +238,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.length < 8) {
+                      return 'Password must be at least 8 characters';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 40.0),
                 Row(
@@ -220,32 +256,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TermsAndPolicyPage(),
-                          ),
-                        );
-                      },
-                      child: Text.rich(
-                        TextSpan(
-                          text: 'I understand the ',
-                          style: TextStyle(fontSize: 15.0, color: Colors.black),
-                          children: [
-                            TextSpan(
-                              text: 'terms & policy.',
-                              style: TextStyle(
-                                fontSize: 15.0,
-                                decoration: TextDecoration.underline,
-                                color: Colors
-                                    .blue, // Use a color to indicate it's clickable
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    const Text(
+                      'I accept the terms and conditions.',
+                      style: TextStyle(fontSize: 12.0),
                     ),
                   ],
                 ),

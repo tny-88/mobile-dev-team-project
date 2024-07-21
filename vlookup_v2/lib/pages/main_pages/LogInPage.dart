@@ -27,7 +27,8 @@ class _LoginPageState extends State<LoginPage> {
     final response = await http.post(
       Uri.parse('https://vlookup-api.ew.r.appspot.com/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'passwordHash': password}),
+      body:
+          jsonEncode({'email': email.toLowerCase(), 'passwordHash': password}),
     );
 
     if (response.statusCode == 200) {
@@ -49,11 +50,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
         title:
-            const Text('Log In', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Login', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Padding(
@@ -64,13 +63,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 30),
-                Image.asset(
-                  'assets/images/Logo.png',
-                  width: 200,
-                  height: 190,
-                  fit: BoxFit.contain,
-                ),
                 const SizedBox(height: 60),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
@@ -84,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? null
                           : 'Enter a valid email',
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 80),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscureText,
@@ -103,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                       ? null
                       : 'Enter your password',
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 130),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {

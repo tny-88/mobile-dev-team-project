@@ -43,6 +43,16 @@ class EventDetailsPageState extends State<EventDetailsPage> {
     _fetchVolunteerCount();
   }
 
+  @override
+  void dispose() {
+    titleController.dispose();
+    descriptionController.dispose();
+    dateController.dispose();
+    locationController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
   String _formattedDate(String date) {
     DateTime parsedDate = DateFormat('dd MM yyyy h:mm').parse(date);
     return DateFormat('MMMM dd, yyyy h:mm a').format(parsedDate);
@@ -56,9 +66,11 @@ class EventDetailsPageState extends State<EventDetailsPage> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      setState(() {
-        _volunteerCount = data['volunteer_count'];
-      });
+      if (mounted) {
+        setState(() {
+          _volunteerCount = data['volunteer_count'];
+        });
+      }
     } else {
       _showAlert('Error', 'Failed to load volunteer count.');
     }
@@ -71,9 +83,11 @@ class EventDetailsPageState extends State<EventDetailsPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     final response = await http.post(
       Uri.parse('https://vlookup-api.ew.r.appspot.com/join_event'),
@@ -84,9 +98,11 @@ class EventDetailsPageState extends State<EventDetailsPage> {
       }),
     );
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     if (response.statusCode == 200) {
       _showAlert(
@@ -106,9 +122,11 @@ class EventDetailsPageState extends State<EventDetailsPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     final user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
@@ -130,9 +148,11 @@ class EventDetailsPageState extends State<EventDetailsPage> {
       }),
     );
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     if (response.statusCode == 200) {
       Navigator.pop(context);
@@ -143,18 +163,22 @@ class EventDetailsPageState extends State<EventDetailsPage> {
   }
 
   Future<void> _deleteEvent() async {
-    setState(() {
-      _isLoading = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = true;
+      });
+    }
 
     final response = await http.delete(
       Uri.parse(
           'https://vlookup-api.ew.r.appspot.com/delete_event/${widget.event.event_id}'),
     );
 
-    setState(() {
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     if (response.statusCode == 200) {
       Navigator.pop(context);
@@ -229,10 +253,12 @@ class EventDetailsPageState extends State<EventDetailsPage> {
       var response = await http.Response.fromStream(streamedResponse);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        setState(() {
-          _updatedEvent =
-              _updatedEvent.copyWith(image: responseData['file_url']);
-        });
+        if (mounted) {
+          setState(() {
+            _updatedEvent =
+                _updatedEvent.copyWith(image: responseData['file_url']);
+          });
+        }
         _showAlert('Image Uploaded', 'The image was successfully uploaded.');
       } else {
         _showAlert('Upload Failed', 'Failed to upload image.');
@@ -243,10 +269,12 @@ class EventDetailsPageState extends State<EventDetailsPage> {
   }
 
   Future<void> _removeImage(String eventId) async {
-    setState(() {
-      _updatedEvent = _updatedEvent.copyWith(
-          image: 'assets/images/default_event_image.jpg');
-    });
+    if (mounted) {
+      setState(() {
+        _updatedEvent = _updatedEvent.copyWith(
+            image: 'assets/images/default_event_image.jpg');
+      });
+    }
 
     final response = await http.put(
       Uri.parse('https://vlookup-api.ew.r.appspot.com/update_event'),
@@ -408,7 +436,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
 
   String viewDateTime(String date) {
     DateTime parsedDate = DateFormat('dd MM yyyy h:mm').parse(date);
-    return DateFormat('dd MMMM, yyyy \n h:mm a').format(parsedDate);
+    return DateFormat('MMMM dd, yyyy h:mm a').format(parsedDate);
   }
 
   @override
@@ -464,21 +492,12 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 72, 164, 75),
+                                      color: Colors.green,
                                     ),
-                                  ),
-                                ),
-                                Text(
-                                  viewDateTime(widget.event.date),
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 149, 149, 149),
                                   ),
                                 ),
                               ],
                             ),
-
                             const SizedBox(height: 16),
                             // Event Description
                             Text(
@@ -489,13 +508,23 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                               ),
                               textAlign: TextAlign.left,
                             ),
+                            const SizedBox(height: 8),
+                            //Creator of event text
+                            Text(
+                              'Created by: ${widget.event.email}',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 TextButton.icon(
                                   icon: const Icon(
                                     Icons.location_pin,
-                                    color: Color.fromARGB(255, 72, 164, 75),
+                                    color: Colors.green,
                                   ),
                                   label: Text(
                                     widget.event.location,
@@ -511,13 +540,52 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                 ),
                                 const Spacer(),
                                 const Spacer(),
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Colors.green),
-                                  onPressed: () {
-                                    _showEditForm(context);
-                                  },
+                                if (isCreator)
+                                  IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color: Colors.green),
+                                    onPressed: () {
+                                      _showEditForm(context);
+                                    },
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            // Event Phone Number with Call Icon
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  widget.event.phone,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
                                 ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      launchPhoneDialer(widget.event.phone);
+                                    },
+                                    child: const Icon(Icons.call)),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  viewDateTime(widget.event.date),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    addEventToCalendar(widget.event);
+                                  },
+                                  child: const Icon(Icons.calendar_month),
+                                )
                               ],
                             ),
                             const SizedBox(height: 16),
@@ -529,56 +597,6 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            const SizedBox(height: 16),
-                            // Event Phone Number with Call Icon
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Contact Us',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      launchPhoneDialer(widget.event.phone);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      elevation:
-                                          2, // button's elevation when it's pressed
-                                    ),
-                                    child: const Icon(
-                                      Icons.call,
-                                    )),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text(
-                                  'Add event to your calendar',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    addEventToCalendar(widget.event);
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    elevation:
-                                        2, // button's elevation when it's pressed
-                                  ),
-                                  child: const Icon(Icons.calendar_month),
-                                )
-                              ],
                             ),
                             if (isCreator)
                               Padding(
@@ -638,12 +656,12 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                 ),
             ],
           ),
+          // Back Button
           Positioned(
             top: 40,
             left: 10,
             child: IconButton(
-              icon: const Icon(Icons.arrow_back,
-                  color: Color.fromARGB(255, 11, 11, 11)),
+              icon: const Icon(Icons.close, color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
             ),
           ),

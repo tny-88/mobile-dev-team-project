@@ -250,7 +250,10 @@ class _HomePageState extends State<HomePage> {
           },
         );
       },
-    );
+    ).whenComplete(() {
+      // Reset the form fields when the bottom sheet is dismissed
+      _resetFormFields();
+    });
   }
 
   void _resetFormFields() {
