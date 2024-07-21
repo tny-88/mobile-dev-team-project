@@ -163,6 +163,11 @@ class _RegEventDetailsPageState extends State<RegEventDetailsPage> {
     }
   }
 
+  String viewDateTime(String date) {
+    DateTime parsedDate = DateFormat('dd MM yyyy h:mm').parse(date);
+    return DateFormat('dd MMMM, yyyy \n h:mm a').format(parsedDate);
+  }
+
   void _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -443,15 +448,16 @@ class _RegEventDetailsPageState extends State<RegEventDetailsPage> {
                                     style: const TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.green,
+                                      color: Color.fromARGB(255, 72, 164, 75),
                                     ),
                                   ),
                                 ),
                                 Text(
-                                  _formattedDate(widget.event.date),
+                                  viewDateTime(widget.event.date),
                                   style: const TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 149, 149, 149),
                                   ),
                                 ),
                               ],

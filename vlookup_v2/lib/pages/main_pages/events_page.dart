@@ -408,7 +408,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
 
   String viewDateTime(String date) {
     DateTime parsedDate = DateFormat('dd MM yyyy h:mm').parse(date);
-    return DateFormat('MMMM dd, yyyy h:mm a').format(parsedDate);
+    return DateFormat('dd MMMM, yyyy \n h:mm a').format(parsedDate);
   }
 
   @override
@@ -468,8 +468,17 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     ),
                                   ),
                                 ),
+                                Text(
+                                  viewDateTime(widget.event.date),
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 149, 149, 149),
+                                  ),
+                                ),
                               ],
                             ),
+
                             const SizedBox(height: 16),
                             // Event Description
                             Text(
