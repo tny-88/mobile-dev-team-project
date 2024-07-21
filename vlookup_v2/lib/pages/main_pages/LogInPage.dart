@@ -49,9 +49,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title:
-            const Text('Login', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Log In', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: Padding(
@@ -62,6 +64,13 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                const SizedBox(height: 30),
+                Image.asset(
+                  'assets/images/Logo.png',
+                  width: 200,
+                  height: 190,
+                  fit: BoxFit.contain,
+                ),
                 const SizedBox(height: 60),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
@@ -75,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                           ? null
                           : 'Enter a valid email',
                 ),
-                const SizedBox(height: 80),
+                const SizedBox(height: 30),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscureText,
@@ -94,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       ? null
                       : 'Enter your password',
                 ),
-                const SizedBox(height: 130),
+                const SizedBox(height: 100),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
@@ -107,7 +116,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: _isLoading
                       ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Login', style: TextStyle(color: Colors.white),),
+                      : const Text(
+                          'Login',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ],
             ),

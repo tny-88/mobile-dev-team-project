@@ -97,12 +97,13 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     const Spacer(),
                     const Spacer(),
+                    const Spacer(),
                     const Text(
-                      'Created \n Events',
+                      'Created\nEvents',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -110,6 +111,7 @@ class _EventCreatorPageState extends State<EventCreatorPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const Spacer(),
                     const Spacer(),
                     Image.asset(
                       'assets/images/Logo.png',

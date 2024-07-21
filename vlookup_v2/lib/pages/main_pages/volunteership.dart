@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/models/event_model.dart';
 import 'package:provider/provider.dart';
+import 'package:vlookup_v2/pages/main_pages/regevents_page.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
@@ -143,7 +144,7 @@ class _VolunteershipState extends State<Volunteership> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      EventDetailsPage(event: event),
+                                      RegEventDetailsPage(event: event),
                                 ),
                               );
                             },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
+import 'package:vlookup_v2/pages/main_pages/terms_and_policy_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -13,6 +14,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   DateTime? _selectedDate;
+  bool _NewsletterAccepted = false;
   bool _termsAccepted = false;
   bool _obscurePassword = true;
   bool _isLoading = false;
@@ -81,12 +83,15 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Sign Up', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text('Sign Up',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: true,
         actions: [
           TextButton(
@@ -215,9 +220,32 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                     ),
-                    const Text(
-                      'I accept the terms and conditions.',
-                      style: TextStyle(fontSize: 12.0),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TermsAndPolicyPage(),
+                          ),
+                        );
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'I understand the ',
+                          style: TextStyle(fontSize: 15.0, color: Colors.black),
+                          children: [
+                            TextSpan(
+                              text: 'terms & policy.',
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                decoration: TextDecoration.underline,
+                                color: Colors
+                                    .blue, // Use a color to indicate it's clickable
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ],
                 ),
