@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         title: 'VlookUp',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 93, 176, 117),),
           useMaterial3: true,
         ),
         initialRoute: '/', // Initial route is usually the splash or login page

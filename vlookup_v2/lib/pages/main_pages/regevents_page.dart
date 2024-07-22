@@ -521,7 +521,7 @@ class _RegEventDetailsPageState extends State<RegEventDetailsPage> {
                               children: [
                                 TextButton.icon(
                                   icon: const Icon(Icons.phone,
-                                      color: Colors.green),
+                                      color: const Color.fromARGB(255, 93, 176, 117),),
                                   label: const Text(
                                     'Contact Us',
                                     style: TextStyle(
