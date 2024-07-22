@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/pages/main_pages/LogInPage.dart';
 import 'package:vlookup_v2/pages/main_pages/terms_and_policy_page.dart';
+import 'package:provider/provider.dart';
+import 'package:vlookup_v2/models/user_model.dart';
+import 'package:vlookup_v2/provider/user_provider.dart';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,6 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _password2Controller = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   String? _gender;
 
@@ -38,7 +43,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  Future<void> _registerUser() async {
+Future<void> _registerUser() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -75,13 +80,18 @@ class _SignUpPageState extends State<SignUpPage> {
     });
 
     if (response.statusCode == 200) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginPage()));
+      final userData = json.decode(response.body)['user'];
+      final user = User.fromJson(userData);
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/home', (Route<dynamic> route) => false);
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Failed to register')));
+          .showSnackBar(SnackBar(content: Text('Failed to register')));
     }
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 Row(
                   children: [
                     Expanded(
@@ -183,7 +193,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
                 TextFormField(
                   keyboardType: TextInputType.number,
                   controller: _phoneController,
@@ -200,7 +210,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
                 TextFormField(
                   keyboardType: TextInputType.emailAddress,
                   controller: _emailController,
@@ -217,7 +227,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
                 TextFormField(
                   controller: _passwordController,
                   obscureText: _obscurePassword,
@@ -246,7 +256,37 @@ class _SignUpPageState extends State<SignUpPage> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
+                TextFormField(
+                  controller: _password2Controller,
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    labelText: 'Confirm Password',
+                    border: const OutlineInputBorder(),
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null ||
+                        _password2Controller.text != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30.0),
                 Row(
                   children: [
                     Checkbox(
@@ -285,7 +325,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 40.0),
+                const SizedBox(height: 30.0),
                 ElevatedButton(
                   onPressed: _isLoading ? null : _registerUser,
                   style: ElevatedButton.styleFrom(
