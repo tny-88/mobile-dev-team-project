@@ -30,6 +30,61 @@ class EventDetailsPageState extends State<EventDetailsPage> {
   late TextEditingController phoneController;
   late AppEvent _updatedEvent;
 
+
+  Future<List<dynamic>> _fetchVolunteers() async {
+    final response = await http.get(
+      Uri.parse(
+          'https://vlookup-api.ew.r.appspot.com/get_volunteers/${widget.event.event_id}'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load volunteers');
+    }
+  }
+
+void _showVolunteerDetails() async {
+    try {
+      final volunteers = await _fetchVolunteers();
+      showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          // Check if the volunteer list is empty
+          if (volunteers.isEmpty) {
+            return Container(
+              height: 200, // Smaller container for the "No Volunteers" message
+              alignment: Alignment.center,
+              child: const Text(
+                'No Volunteers',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+            );
+          } else {
+            return Container(
+              height: 400,
+              child: ListView.builder(
+                itemCount: volunteers.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(volunteers[index]['name']),
+                    subtitle: Text(volunteers[index]['email']),
+                  );
+                },
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      _showAlert('Error', 'Failed to fetch volunteer details.');
+    }
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -560,12 +615,16 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                             ),
                             const SizedBox(height: 16),
                             // Number of Volunteers
-                            Text(
-                              'Volunteers: $_volunteerCount',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
+                          InkWell(
+                              onTap: _showVolunteerDetails,
+                              child: Text(
+                                'Volunteers: $_volunteerCount',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                             const SizedBox(height: 16),
