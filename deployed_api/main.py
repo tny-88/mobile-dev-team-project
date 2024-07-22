@@ -367,6 +367,9 @@ def upload_event_pic(event_id):
     
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+
 
 
 
@@ -430,6 +433,28 @@ def get_volunteer_count(event_id):
     volunteer_count = len(list(volunteership_ref))
     
     return jsonify({'volunteer_count': volunteer_count}), 200
+
+# Get all volunteer's email addresses and names from the Users table for a specific event
+@app.route('/get_volunteers/<event_id>', methods=['GET'])
+def get_volunteers(event_id):
+    volunteers = []
+    volunteership_ref = db.collection('Volunteerships').where('event_id', '==', event_id).get()
+    
+    for volunteership in volunteership_ref:
+        volunteer_data = volunteership.to_dict()
+        volunteer_email = volunteer_data['email']
+        
+        user_ref = db.collection('Users').document(volunteer_email)
+        user_data = user_ref.get().to_dict()
+        
+        volunteer = {
+            'email': volunteer_email,
+            'name': user_data['name']
+        }
+        volunteers.append(volunteer)
+    
+    return jsonify(volunteers), 200
+
 
 
 # Leave an event
