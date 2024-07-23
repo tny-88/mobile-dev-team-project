@@ -215,29 +215,55 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      TextField(
+                      TextFormField(
                         controller: titleController,
                         decoration: InputDecoration(labelText: 'Title'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the title';
+                          }
+                          return null;
+                        },
                       ),
-                      TextField(
+                      TextFormField(
                         controller: descriptionController,
                         decoration: InputDecoration(labelText: 'Description'),
                         maxLines:
                             5, // Set this to a higher number for more lines
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the description';
+                          }
+                          return null;
+                        },
                       ),
                       TextField(
                         controller: dateTimeController,
                         decoration: InputDecoration(labelText: 'Date and Time'),
                         onTap: () => pickDateTime(context, setModalState),
                       ),
-                      TextField(
+                      TextFormField(
                         controller: locationController,
                         decoration: InputDecoration(labelText: 'Location'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter the location';
+                          }
+                          return null;
+                        },
                       ),
-                      TextField(
+                      TextFormField(
                         keyboardType: TextInputType.phone,
                         controller: phoneController,
                         decoration: InputDecoration(labelText: 'Phone'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter your phone number';
+                          } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                            return 'Please enter a valid 10-digit phone number';
+                          }
+                          return null;
+                        },
                       ),
                       ElevatedButton(
                         onPressed: _createEvent,

@@ -219,6 +219,7 @@ class EventCard extends StatelessWidget {
                   ),
                   Text(
                     description,
+                    maxLines: 2, // Limit descriptions 2 lines
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
