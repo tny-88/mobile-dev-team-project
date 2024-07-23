@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:vlookup_v2/models/event_model.dart';
 import 'package:provider/provider.dart';
-import 'package:vlookup_v2/pages/main_pages/regevents_page.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 import 'package:vlookup_v2/pages/main_pages/events_page.dart';
 
@@ -144,7 +143,7 @@ class _VolunteershipState extends State<Volunteership> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      RegEventDetailsPage(event: event),
+                                      EventDetailsPage(event: event),
                                 ),
                               );
                             },
@@ -191,14 +190,16 @@ class VolunteershipCard extends StatelessWidget {
             width: double.infinity,
             height: 200,
             errorBuilder: (context, error, stackTrace) {
-              return Container(
+              // Attempt to load the default image from assets if the network image fails
+              return Image.asset(
+                'assets/images/default_event_image.jpg',
+                fit: BoxFit.cover,
                 width: double.infinity,
                 height: 200,
-                color: Colors.grey[300],
-                child: const Icon(Icons.error, color: Colors.red),
               );
             },
           ),
+
           Positioned(
             bottom: 0,
             left: 0,
