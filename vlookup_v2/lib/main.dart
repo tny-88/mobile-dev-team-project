@@ -6,7 +6,9 @@ import 'package:vlookup_v2/pages/main_pages/SplashOptionsPage.dart';
 import 'package:vlookup_v2/widgets/custom_nav_bar.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 
-void main() {
+void main() async {
+  await Future.delayed(const Duration(seconds: 4));
+
   runApp(const MyApp());
 }
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         title: 'VlookUp',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 93, 176, 117),),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightGreen),
           useMaterial3: true,
         ),
         initialRoute: '/', // Initial route is usually the splash or login page

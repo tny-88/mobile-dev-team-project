@@ -185,7 +185,6 @@ class EventDetailsPageState extends State<EventDetailsPage> {
     } else {
       _showAlert('Error', 'Failed to volunteer for the event.');
     }
-
   }
 
   Future<void> _leaveEvent() async {
@@ -219,7 +218,6 @@ class EventDetailsPageState extends State<EventDetailsPage> {
     } else {
       _showAlert('Error', 'Failed to leave the event.');
     }
-
   }
 
   Future<void> _editEvent() async {
@@ -625,22 +623,36 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                TextButton.icon(
-                                  icon: const Icon(
-                                    Icons.location_pin,
-                                    color: Colors.green,
-                                  ),
-                                  label: Text(
-                                    widget.event.location,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
+                                Container(
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      width: 2,
                                     ),
+                                    borderRadius: BorderRadius.circular(100),
+                                    color: Colors.white,
                                   ),
-                                  onPressed: () {
-                                    launchUrl(Uri.parse(
-                                        'https://www.google.com/maps/search/?api=1&query=${widget.event.location}'));
-                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(
+                                        Icons.location_pin,
+                                        color: Colors.green,
+                                      ),
+                                      const SizedBox(
+                                          width:
+                                              8), // Space between icon and text
+                                      Text(
+                                        widget.event.location,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 const Spacer(),
                                 const Spacer(),
@@ -700,6 +712,32 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     ),
                                     child: const Icon(
                                       Icons.call,
+                                    )),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Open in Maps',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      launchUrl(Uri.parse(
+                                          'https://www.google.com/maps/search/?api=1&query=${widget.event.location}'));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      elevation:
+                                          2, // button's elevation when it's pressed
+                                    ),
+                                    child: const Icon(
+                                      Icons.map_outlined,
                                     )),
                               ],
                             ),
