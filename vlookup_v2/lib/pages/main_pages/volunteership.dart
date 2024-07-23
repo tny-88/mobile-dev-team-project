@@ -199,7 +199,6 @@ class VolunteershipCard extends StatelessWidget {
               );
             },
           ),
-
           Positioned(
             bottom: 0,
             left: 0,
@@ -220,6 +219,7 @@ class VolunteershipCard extends StatelessWidget {
                   ),
                   Text(
                     description,
+                    maxLines: 2,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
