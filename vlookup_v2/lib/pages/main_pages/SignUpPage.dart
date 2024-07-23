@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:vlookup_v2/models/user_model.dart';
 import 'package:vlookup_v2/provider/user_provider.dart';
 
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -43,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-Future<void> _registerUser() async {
+  Future<void> _registerUser() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -90,8 +89,6 @@ Future<void> _registerUser() async {
           .showSnackBar(SnackBar(content: Text('Failed to register')));
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -206,6 +203,8 @@ Future<void> _registerUser() async {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter your phone number';
+                    } else if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                      return 'Please enter a valid 10-digit phone number';
                     }
                     return null;
                   },

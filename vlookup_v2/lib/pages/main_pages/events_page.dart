@@ -424,6 +424,8 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                         ),
                         TextFormField(
                           controller: descriptionController,
+                          maxLines:
+                              5, // Set this to a higher number for more lines,
                           decoration: InputDecoration(labelText: 'Description'),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -621,7 +623,7 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                             ),
 
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
                                   padding: const EdgeInsets.all(8.0),
@@ -654,18 +656,16 @@ class EventDetailsPageState extends State<EventDetailsPage> {
                                     ],
                                   ),
                                 ),
-                                const Spacer(),
-                                const Spacer(),
-                                if (isCreator)
-                                  IconButton(
-                                    icon: const Icon(Icons.edit,
-                                        color: Colors.green),
-                                    onPressed: () {
-                                      _showEditForm(context);
-                                    },
-                                  ),
                               ],
                             ),
+                            if (isCreator)
+                              IconButton(
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.green),
+                                onPressed: () {
+                                  _showEditForm(context);
+                                },
+                              ),
                             const SizedBox(height: 8),
                             //Creator of event text
                             Text(
