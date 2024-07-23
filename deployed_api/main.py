@@ -63,7 +63,9 @@ def create_user():
     else:
         # Add user data to Firestore
         user_ref.set(user_data)
-        return jsonify({'message': 'User created successfully!'}), 200
+        # Get user information without passwordHash', 'createdAt', 'updatedAt', 'profileImage'and return it to the client
+        user_info = {key: val for key, val in user_data.items() if key not in ['passwordHash', 'createdAt', 'updatedAt', 'profileImage']}
+        return jsonify({'message': 'User created successfully!', 'user': user_info}), 200
 
 
 # update user details
@@ -279,6 +281,9 @@ def get_events():
     for event in event_ref:
         event_data = event.to_dict()
         events.append(event_data)
+    
+    #Newest events first
+    events = sorted(events, key=lambda x: x['createdAt'], reverse=True)
     
     return jsonify(events), 200
 
