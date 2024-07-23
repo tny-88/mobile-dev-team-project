@@ -30,7 +30,6 @@ class EventDetailsPageState extends State<EventDetailsPage> {
   late TextEditingController phoneController;
   late AppEvent _updatedEvent;
 
-
   Future<List<dynamic>> _fetchVolunteers() async {
     final response = await http.get(
       Uri.parse(
@@ -40,11 +39,22 @@ class EventDetailsPageState extends State<EventDetailsPage> {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Failed to load volunteers');
+      _showAlert('Error', 'Failed to load volunteers');
+      return []; // Return an empty list if there's an error
     }
   }
 
-void _showVolunteerDetails() async {
+  void _checkVolunteerStatus() async {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user != null) {
+      final volunteers = await _fetchVolunteers();
+      setState(() {
+        _isVolunteered = volunteers.any((v) => v['email'] == user.email);
+      });
+    }
+  }
+
+  void _showVolunteerDetails() async {
     try {
       final volunteers = await _fetchVolunteers();
       showModalBottomSheet(
@@ -84,7 +94,6 @@ void _showVolunteerDetails() async {
     }
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -95,7 +104,8 @@ void _showVolunteerDetails() async {
     locationController = TextEditingController(text: widget.event.location);
     phoneController = TextEditingController(text: widget.event.phone);
     _updatedEvent = widget.event;
-    _fetchVolunteerCount();
+    _fetchVolunteerCount()
+        .then((_) => _checkVolunteerStatus()); // Chain these calls
   }
 
   @override
@@ -131,18 +141,24 @@ void _showVolunteerDetails() async {
     }
   }
 
+  bool _isVolunteered = false; // State to track if the user has volunteered
+
   Future<void> _volunteer() async {
+    // If already volunteered, run the leave event function instead
+    if (_isVolunteered) {
+      _leaveEvent();
+      return;
+    }
+
     final user = Provider.of<UserProvider>(context, listen: false).user;
     if (user == null) {
       _showAlert('Error', 'No user logged in');
       return;
     }
 
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
+    setState(() {
+      _isLoading = true;
+    });
 
     final response = await http.post(
       Uri.parse('https://vlookup-api.ew.r.appspot.com/join_event'),
@@ -153,16 +169,15 @@ void _showVolunteerDetails() async {
       }),
     );
 
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+    setState(() {
+      _isLoading = false;
+    });
 
     if (response.statusCode == 200) {
       _showAlert(
           'Success', 'You have successfully volunteered for this event.');
-      _fetchVolunteerCount();
+      _isVolunteered = true;
+      _fetchVolunteerCount().then((_) => _checkVolunteerStatus());
     } else if (response.statusCode == 409) {
       _showAlert('Uh Oh', 'You have already joined this event');
     } else if (response.statusCode == 403) {
@@ -170,6 +185,41 @@ void _showVolunteerDetails() async {
     } else {
       _showAlert('Error', 'Failed to volunteer for the event.');
     }
+
+  }
+
+  Future<void> _leaveEvent() async {
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+    if (user == null) {
+      _showAlert('Error', 'No user logged in');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final response = await http.delete(
+      Uri.parse('https://vlookup-api.ew.r.appspot.com/leave_event'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'email': user.email,
+        'event_id': widget.event.event_id,
+      }),
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (response.statusCode == 200) {
+      _showAlert('Success', 'You have successfully left the event.');
+      _isVolunteered = false;
+      _fetchVolunteerCount().then((_) => _checkVolunteerStatus());
+    } else {
+      _showAlert('Error', 'Failed to leave the event.');
+    }
+
   }
 
   Future<void> _editEvent() async {
@@ -615,7 +665,7 @@ void _showVolunteerDetails() async {
                             ),
                             const SizedBox(height: 16),
                             // Number of Volunteers
-                          InkWell(
+                            InkWell(
                               onTap: _showVolunteerDetails,
                               child: Text(
                                 'Volunteers: $_volunteerCount',
@@ -720,16 +770,19 @@ void _showVolunteerDetails() async {
                       onPressed: _isLoading ? null : _volunteer,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
-                        backgroundColor: const Color.fromARGB(255, 93, 176, 117),
+                        backgroundColor: _isVolunteered
+                            ? Colors.red
+                            : Colors.green, // Change color based on status
                         padding: const EdgeInsets.symmetric(vertical: 15),
                         textStyle: const TextStyle(fontSize: 18),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(
                               valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : const Text('Volunteer'),
+                                  AlwaysStoppedAnimation<Color>(Colors.white))
+                          : Text(_isVolunteered
+                              ? 'Leave Event'
+                              : 'Volunteer'), // Change text based on status
                     ),
                   ),
                 ),
